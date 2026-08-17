@@ -590,6 +590,52 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--gl-ink-600);
 }
 .gl-nav-mobile ul { list-style: none; margin: 0; padding: 0; }
+
+/* Rubriques repliables. « is-collapsible » est posée par le script : sans lui,
+   aucune de ces règles ne s'applique et les sous-menus restent dépliés, donc
+   navigables, plutôt que cachés derrière un bouton inerte. */
+.gl-nav-mobile__row {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--gl-border);
+}
+/* Le trait passe sur la ligne entière : porté par le lien, il s'arrêtait avant
+   le bouton et se doublait de celui de la ligne. Le sélecteur reprend « li »
+   pour peser plus lourd que « .gl-nav-mobile li a », qui pose cette bordure. */
+.gl-nav-mobile li .gl-nav-mobile__row > a { flex: 1 1 auto; border-bottom: 0; }
+
+.gl-nav-mobile__toggle {
+  position: relative;
+  flex: 0 0 auto;
+  /* 44 px : la cible tactile minimale recommandée. */
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--gl-lagoon-600);
+  cursor: pointer;
+}
+.gl-nav-mobile__toggle::before,
+.gl-nav-mobile__toggle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: currentColor;
+  border-radius: 1px;
+  transform: translate(-50%, -50%);
+  transition: transform 0.2s ease;
+}
+.gl-nav-mobile__toggle::before { width: 13px; height: 2px; }
+.gl-nav-mobile__toggle::after { width: 2px; height: 13px; }
+/* Le trait vertical pivote sur l'horizontal : le plus devient un moins. */
+.gl-nav-mobile__toggle[aria-expanded="true"]::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.gl-nav-mobile.is-collapsible .sub-menu { display: none; }
+.gl-nav-mobile.is-collapsible li[data-open="true"] > .sub-menu { display: block; }
 /* Navigation desktop : masquée sous 1080px. */
 .gl-nav-desktop { display: none; }
 

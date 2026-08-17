@@ -36,8 +36,12 @@ function gl_enqueue_assets(): void {
 	// Libellés du carrousel : ils changent selon l'état, donc côté script, mais
 	// doivent rester traduisibles comme le reste du thème.
 	wp_localize_script( 'gl-theme', 'glTextes', array(
-		'pause'    => __( 'Mettre en pause le défilement', 'grand-lahou' ),
-		'reprendre' => __( 'Reprendre le défilement', 'grand-lahou' ),
+		'pause'      => __( 'Mettre en pause le défilement', 'grand-lahou' ),
+		'reprendre'  => __( 'Reprendre le défilement', 'grand-lahou' ),
+		/* translators: %s : intitulé de la rubrique. */
+		'deplierRub' => __( 'Déplier la rubrique %s', 'grand-lahou' ),
+		/* translators: %s : intitulé de la rubrique. */
+		'plierRub'   => __( 'Replier la rubrique %s', 'grand-lahou' ),
 	) );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {

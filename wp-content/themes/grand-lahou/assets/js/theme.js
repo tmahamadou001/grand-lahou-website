@@ -30,6 +30,80 @@
     });
   }
 
+  /* --- Sous-menus repliables (mobile) ----------------------------------- */
+
+  /*
+   * Les rubriques à sous-menu s'ouvrent à la demande, au lieu de dérouler
+   * toute l'arborescence d'emblée. Le repli est posé par le script et non par
+   * la feuille de styles : sans JavaScript, les sous-menus resteraient
+   * dépliés — visibles et navigables — plutôt qu'inaccessibles derrière un
+   * bouton inerte.
+   */
+  if (mobileNav) {
+    var textesNav = window.glTextes || {};
+    var rubriques = mobileNav.querySelectorAll('li');
+    var compteur = 0;
+
+    Array.prototype.forEach.call(rubriques, function (li) {
+      // On repère les sous-menus par la structure et non par une classe :
+      // le menu de repli du thème ne pose pas « menu-item-has-children ».
+      var sousMenu = li.querySelector(':scope > ul');
+      var lien = li.querySelector(':scope > a');
+      if (!sousMenu || !lien) { return; }
+
+      compteur++;
+      var id = 'gl-sous-menu-' + compteur;
+      sousMenu.id = id;
+
+      var bouton = document.createElement('button');
+      bouton.type = 'button';
+      bouton.className = 'gl-nav-mobile__toggle';
+      bouton.setAttribute('aria-expanded', 'false');
+      bouton.setAttribute('aria-controls', id);
+
+      // Une ligne commune au lien et au bouton : le trait de séparation court
+      // alors sur toute la largeur, et non sur celle du seul texte.
+      var ligne = document.createElement('div');
+      ligne.className = 'gl-nav-mobile__row';
+      li.insertBefore(ligne, lien);
+      ligne.appendChild(lien);
+      ligne.appendChild(bouton);
+
+      function majEtiquette(ouvert) {
+        var modele = ouvert
+          ? (textesNav.plierRub || 'Replier la rubrique %s')
+          : (textesNav.deplierRub || 'Déplier la rubrique %s');
+        bouton.setAttribute('aria-label', modele.replace('%s', lien.textContent.trim()));
+      }
+
+      function basculer() {
+        var ouvert = li.getAttribute('data-open') === 'true';
+        li.setAttribute('data-open', ouvert ? 'false' : 'true');
+        bouton.setAttribute('aria-expanded', ouvert ? 'false' : 'true');
+        majEtiquette(!ouvert);
+      }
+
+      bouton.addEventListener('click', basculer);
+
+      // Une rubrique sans page propre — « La mairie » pointe sur « # » — n'a
+      // nulle part où mener : le libellé entier sert alors de bascule, plutôt
+      // que d'obliger à viser le petit bouton.
+      var href = lien.getAttribute('href') || '';
+      if (href === '#' || href.slice(-1) === '#') {
+        lien.addEventListener('click', function (event) {
+          event.preventDefault();
+          basculer();
+        });
+      }
+
+      li.setAttribute('data-open', 'false');
+      majEtiquette(false);
+    });
+
+    // Pose le repli seulement si des sous-menus ont bien été équipés.
+    if (compteur) { mobileNav.classList.add('is-collapsible'); }
+  }
+
   /* --- Panneau de recherche --------------------------------------------- */
 
   var panneau = document.querySelector('[data-gl-search-panel]');
