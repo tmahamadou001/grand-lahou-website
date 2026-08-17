@@ -12,8 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+// Chargé en premier : les formulaires s'appuient sur sa limitation de débit.
+require_once __DIR__ . '/grand-lahou-core/security.php';
 require_once __DIR__ . '/grand-lahou-core/post-types.php';
 require_once __DIR__ . '/grand-lahou-core/meta-boxes.php';
+require_once __DIR__ . '/grand-lahou-core/elus.php';
 require_once __DIR__ . '/grand-lahou-core/term-image.php';
 require_once __DIR__ . '/grand-lahou-core/settings.php';
 require_once __DIR__ . '/grand-lahou-core/contact-form.php';

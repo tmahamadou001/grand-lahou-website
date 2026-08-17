@@ -1,11 +1,14 @@
 <?php
 /**
- * Pharmacie de garde en cours, et gardes à venir.
+ * Pharmacie de garde, puis les autres pharmacies de la commune.
  *
  * Cette information est cherchée en urgence, souvent le soir et sur un
- * téléphone : elle passe donc avant le reste de la page, le numéro est
- * cliquable, et la période est écrite en toutes lettres pour qu'on sache d'un
- * coup d'œil si elle est à jour.
+ * téléphone : elle passe donc avant le reste de la page, et les numéros sont
+ * cliquables pour appeler d'un geste.
+ *
+ * La pharmacie de garde est celle désignée dans l'écran « Mairie ». Si aucune
+ * ne l'est, l'encadré disparaît mais la liste des pharmacies reste : un
+ * habitant qui cherche un numéro le trouve quand même.
  *
  * @package GrandLahou
  */
@@ -14,37 +17,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$gl_garde   = gl_pharmacie_de_garde();
-$gl_a_venir = gl_pharmacies_a_venir( 3 );
+$gl_garde  = gl_pharmacie_de_garde();
+$gl_autres = gl_autres_pharmacies();
 
-if ( ! $gl_garde && ! $gl_a_venir ) {
+if ( ! $gl_garde && ! $gl_autres ) {
 	return;
 }
 
 // Section bleu pâle : la vague du pied de page doit s'y poser si rien ne suit.
 gl_fond_derniere_section( 'alt' );
-
-/**
- * Met en forme la période de garde.
- *
- * @param int $post_id Pharmacie.
- * @return string
- */
-function gl_periode_de_garde( int $post_id ): string {
-	$debut = get_post_meta( $post_id, 'gl_pharmacie_debut', true );
-	$fin   = get_post_meta( $post_id, 'gl_pharmacie_fin', true );
-
-	if ( ! $debut || ! $fin ) {
-		return '';
-	}
-
-	return sprintf(
-		/* translators: %1$s : date de début, %2$s : date de fin. */
-		__( 'Du %1$s au %2$s', 'grand-lahou' ),
-		wp_date( 'j F', strtotime( (string) $debut ) ),
-		wp_date( 'j F Y', strtotime( (string) $fin ) )
-	);
-}
 ?>
 
 <section class="gl-section gl-section--alt" id="pharmacie-de-garde">
@@ -59,7 +40,6 @@ function gl_periode_de_garde( int $post_id ): string {
 			<?php
 			$gl_tel     = (string) get_post_meta( $gl_garde->ID, 'gl_pharmacie_tel', true );
 			$gl_adresse = (string) get_post_meta( $gl_garde->ID, 'gl_pharmacie_adresse', true );
-			$gl_periode = gl_periode_de_garde( $gl_garde->ID );
 			?>
 			<div class="gl-garde gl-reveal">
 				<span class="gl-garde__icon" aria-hidden="true">
@@ -72,9 +52,6 @@ function gl_periode_de_garde( int $post_id ): string {
 					<?php if ( $gl_adresse ) : ?>
 						<p class="gl-garde__meta"><?php echo esc_html( $gl_adresse ); ?></p>
 					<?php endif; ?>
-					<?php if ( $gl_periode ) : ?>
-						<p class="gl-garde__meta"><?php echo esc_html( $gl_periode ); ?></p>
-					<?php endif; ?>
 				</div>
 
 				<?php if ( $gl_tel ) : ?>
@@ -86,24 +63,35 @@ function gl_periode_de_garde( int $post_id ): string {
 			</div>
 		<?php else : ?>
 			<p class="gl-section__lead">
-				<?php esc_html_e( 'Aucune garde n\'est renseignée pour aujourd\'hui. Contactez la mairie ou l\'hôpital général.', 'grand-lahou' ); ?>
+				<?php esc_html_e( 'Aucune pharmacie de garde n\'est renseignée pour le moment. Voici les pharmacies de la commune :', 'grand-lahou' ); ?>
 			</p>
 		<?php endif; ?>
 
-		<?php if ( $gl_a_venir ) : ?>
-			<h3 class="gl-garde__suite"><?php esc_html_e( 'Prochaines gardes', 'grand-lahou' ); ?></h3>
+		<?php if ( $gl_autres ) : ?>
+			<h3 class="gl-garde__suite">
+				<?php
+				echo $gl_garde
+					? esc_html__( 'Autres pharmacies de la commune', 'grand-lahou' )
+					: esc_html__( 'Pharmacies de la commune', 'grand-lahou' );
+				?>
+			</h3>
 			<ul class="gl-numbers gl-reveal gl-reveal--stagger">
-				<?php foreach ( $gl_a_venir as $gl_suivante ) : ?>
+				<?php foreach ( $gl_autres as $gl_autre ) : ?>
+					<?php
+					$gl_tel_autre     = (string) get_post_meta( $gl_autre->ID, 'gl_pharmacie_tel', true );
+					$gl_adresse_autre = (string) get_post_meta( $gl_autre->ID, 'gl_pharmacie_adresse', true );
+					?>
 					<li class="gl-numbers__item">
 						<span class="gl-numbers__label">
-							<?php echo esc_html( get_the_title( $gl_suivante ) ); ?>
-							<span class="gl-numbers__desc"><?php echo esc_html( gl_periode_de_garde( $gl_suivante->ID ) ); ?></span>
+							<?php echo esc_html( get_the_title( $gl_autre ) ); ?>
+							<?php if ( $gl_adresse_autre ) : ?>
+								<span class="gl-numbers__desc"><?php echo esc_html( $gl_adresse_autre ); ?></span>
+							<?php endif; ?>
 						</span>
-						<?php $gl_tel_suivante = (string) get_post_meta( $gl_suivante->ID, 'gl_pharmacie_tel', true ); ?>
-						<?php if ( $gl_tel_suivante ) : ?>
+						<?php if ( $gl_tel_autre ) : ?>
 							<a class="gl-numbers__tel"
-								href="<?php echo esc_url( 'tel:' . preg_replace( '/[^0-9+]/', '', $gl_tel_suivante ) ); ?>">
-								<?php echo esc_html( $gl_tel_suivante ); ?>
+								href="<?php echo esc_url( 'tel:' . preg_replace( '/[^0-9+]/', '', $gl_tel_autre ) ); ?>">
+								<?php echo esc_html( $gl_tel_autre ); ?>
 							</a>
 						<?php endif; ?>
 					</li>

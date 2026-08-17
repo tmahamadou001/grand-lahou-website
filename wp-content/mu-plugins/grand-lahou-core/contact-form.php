@@ -48,6 +48,14 @@ function gl_handle_contact_form(): void {
 		exit;
 	}
 
+	// Plafond par adresse IP : cinq messages par heure. Un administré qui
+	// écrit deux fois de suite n'est jamais gêné ; un robot qui relit le
+	// jeton dans la page ne peut pas noyer la boîte de la mairie.
+	if ( ! gl_debit_autorise( 'contact', 5, HOUR_IN_SECONDS ) ) {
+		wp_safe_redirect( add_query_arg( 'contact', 'trop', $redirect ) );
+		exit;
+	}
+
 	$nom     = sanitize_text_field( wp_unslash( $_POST['gl_contact_nom'] ?? '' ) );
 	$email   = sanitize_email( wp_unslash( $_POST['gl_contact_email'] ?? '' ) );
 	$sujet   = sanitize_text_field( wp_unslash( $_POST['gl_contact_sujet'] ?? '' ) );
@@ -101,6 +109,11 @@ function gl_contact_feedback(): ?array {
 			return array(
 				'type'  => 'erreur',
 				'texte' => __( 'Merci de renseigner votre nom, une adresse e-mail valide et votre message.', 'grand-lahou' ),
+			);
+		case 'trop':
+			return array(
+				'type'  => 'erreur',
+				'texte' => __( 'Vous avez envoyé plusieurs messages coup sur coup. Merci de patienter un moment avant de réessayer, ou de joindre la mairie par téléphone.', 'grand-lahou' ),
 			);
 		case 'erreur':
 			return array(

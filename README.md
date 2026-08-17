@@ -33,7 +33,9 @@ tools/assets/                 Logo de la ville (WebP servi, PNG d'origine)
 wp-content/
   mu-plugins/grand-lahou-core/  Socle métier — toujours actif
     post-types.php              Agenda, démarches, services, élus, lieux, numéros,
-                                FAQ, pharmacies de garde, diapositives
+                                FAQ, pharmacies, diapositives
+    elus.php                    Catégories d'élus : choix unique et ordre des sections
+    security.php                Énumération des comptes, entêtes, débit des formulaires
     seo.php                     Description, Open Graph, données structurées
     term-image.php              Vignette des catégories de lieux
     contact-form.php            Traitement du formulaire de contact
@@ -51,7 +53,7 @@ wp-content/
     taxonomy-gl_categorie_lieu.php  Lieux d'une catégorie (les plages, les hôtels…)
     page-templates/             Gabarits à choisir dans « Attributs de page »
       mot-du-maire.php          Portrait à gauche, message à droite
-      conseil-municipal.php     Grille de portraits des élus
+      les-elus.php              Portraits des élus, groupés par catégorie
       contact.php               Coordonnées, formulaire, plan d'accès
       ville-en-bref.php         Présentation de la ville et galerie
       cadre-de-vie.php          Les catégories de lieux, cliquables
@@ -69,11 +71,12 @@ affiché vient toujours de l'administration, jamais du code.
 | Accueil — « À propos » | *intégré* | Écran **Mairie** : titre, texte, trois chiffres clés et trois raccourcis |
 | Accueil — newsletter | *intégré* | Écran **Mairie** : affichage, titre et texte ; les inscrits arrivent dans le menu **Newsletter** |
 | Mot du maire | Mot du maire | Le message dans la page ; photo, nom et fonction depuis la fiche de l'élu dont la case « C'est le maire » est cochée |
-| Conseil municipal | Conseil municipal | Menu **Conseil municipal** : un élu = une fiche, l'ordre suit le champ « Ordre » |
+| Les élus | Les élus | Menu **Les élus** : un élu = une fiche, rangée dans une catégorie (le maire, les adjoints…). Les sections de la page et leur ordre viennent de **Les élus → Catégories** |
 | Organigramme | *aucun* | Page ordinaire : du texte et l'image de l'organigramme insérée dans l'éditeur |
 | Contact | Contact | Écran **Mairie** : adresse, téléphone, e-mail, horaires, carte |
 | La ville en bref | La ville en bref | Le texte et la photo de la page ; la galerie reprend les photos des points d'intérêt |
 | Cadre de vie | Cadre de vie | Menu **Découvrir → Catégories** (nom + vignette) ; les lieux se rangent dedans |
+| Services — pharmacie de garde | *intégré* | Menu **Pharmacies** pour les coordonnées ; écran **Mairie** pour désigner celle qui est de garde |
 
 Le fil d'Ariane déduit sa rubrique du menu principal : une page rangée sous
 « La mairie » affiche « Accueil / La mairie / … » sans réglage particulier.
@@ -87,6 +90,15 @@ reste actif même si le thème change un jour. Le thème ne fait que l'affichage
 **Types de contenu dédiés plutôt qu'ACF.** Le socle fonctionne sans extension
 payante. Les champs sont des boîtes simples sous l'éditeur. ACF peut être
 ajouté plus tard sans conflit si les besoins se complexifient.
+
+**Durcissement dans le dépôt plutôt que dans une extension.** L'énumération des
+comptes, les entêtes de sécurité et le plafonnement des formulaires publics
+tiennent en un fichier versionné, qui suit le site partout et ne dépend pas
+d'une mise à jour tierce. Les trois sujets qu'une extension traite mieux —
+tentatives de connexion, double authentification, sauvegardes — sont confiés à
+UpdraftPlus, Limit Login Attempts Reloaded et Two Factor. Le reste du parc
+d'extensions est délibérément gardé au minimum : chaque extension est une
+surface d'attaque de plus.
 
 **Pas de demande en ligne.** Conformément au cahier des charges, les fiches
 démarches orientent vers les plateformes nationales (ONECI,
@@ -250,22 +262,24 @@ une recherche du type « acte de naissance Grand-Lahou ».
 
 ## Mise en production
 
-Le cahier des charges prévoit un hébergement mutualisé géré et un domaine
-`.ci`. À prévoir avant la mise en ligne :
+**La procédure complète est dans [docs/deploiement.md](docs/deploiement.md)** :
+choix de l'hébergement et du domaine, migration pas à pas depuis Docker,
+mise en place de Cloudflare, réglage des extensions de sécurité, checklist du
+jour J et calendrier d'entretien.
 
-- `WP_DEBUG=0` et suppression du `debug.log`.
-- HTTPS forcé sur tout le site.
+Les deux points à retenir ici :
+
+- **Le dépôt ne contient ni le cœur de WordPress, ni les images, ni la base.**
+  Une mise en ligne transporte trois flux séparés — c'est en oubliant les
+  images qu'on obtient un site aux cadres vides.
 - **Envoi des e-mails.** Le formulaire de contact utilise `wp_mail()`. Sans
   configuration, PHP tente un envoi local qui échoue chez la plupart des
   hébergeurs mutualisés — et échoue systématiquement dans le conteneur Docker,
   qui n'a aucun agent d'envoi. Installez une extension SMTP (WP Mail SMTP) avec
   les identifiants d'une boîte du domaine `mairie-grandlahou.ci`, puis envoyez
-  un message de test depuis la page Contact avant la mise en ligne.
-- Extensions à installer côté hébergeur : sauvegardes automatiques
-  (UpdraftPlus), sécurité (Wordfence ou équivalent), référencement (Yoast SEO).
-- Compte administrateur nominatif, mot de passe fort, et un compte **Éditeur**
-  pour l'agent municipal — voir `docs/guide-agent-municipal.md`.
-- Vérifier que le dossier `wp-content/uploads` est accessible en écriture.
+  un message de test depuis la page Contact avant la mise en ligne. C'est la
+  seule extension qui reste à installer : UpdraftPlus, Limit Login Attempts
+  Reloaded et Two Factor le sont déjà.
 
 ## Reste à faire
 

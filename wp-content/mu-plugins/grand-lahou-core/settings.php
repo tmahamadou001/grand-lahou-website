@@ -175,6 +175,18 @@ function gl_settings_schema(): array {
 				),
 			),
 		),
+		'pharmacie' => array(
+			'title'       => __( 'Pharmacie de garde', 'grand-lahou' ),
+			'description' => __( 'La pharmacie affichée sur le site. Elle le reste jusqu\'à ce que vous en désigniez une autre : il n\'y a pas de date à saisir. Les pharmacies elles-mêmes se créent dans le menu « Pharmacies ».', 'grand-lahou' ),
+			'fields'      => array(
+				'pharmacie_garde' => array(
+					'label'      => __( 'Pharmacie de garde actuelle', 'grand-lahou' ),
+					'type'       => 'select',
+					'options_cb' => 'gl_options_pharmacies',
+					'help'       => __( 'Pensez à la changer à chaque relève. Choisissez « Aucune » pour retirer le bloc du site.', 'grand-lahou' ),
+				),
+			),
+		),
 		'reseaux' => array(
 			'title'  => __( 'Réseaux sociaux', 'grand-lahou' ),
 			'fields' => array(
@@ -193,6 +205,80 @@ function gl_settings_schema(): array {
 			),
 		),
 	);
+}
+
+/**
+ * Liste les pharmacies proposées dans le réglage « Pharmacie de garde ».
+ *
+ * Les options sont construites à la volée : une pharmacie ajoutée dans le menu
+ * « Pharmacies » apparaît aussitôt dans la liste, sans rien toucher au code.
+ *
+ * @return array<string, string> Identifiant du contenu => nom affiché.
+ */
+function gl_options_pharmacies(): array {
+	$options = array( '' => __( '— Aucune pharmacie de garde —', 'grand-lahou' ) );
+
+	$pharmacies = get_posts( array(
+		'post_type'      => 'gl_pharmacie',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'orderby'        => 'title',
+		'order'          => 'ASC',
+	) );
+
+	foreach ( $pharmacies as $pharmacie ) {
+		$options[ (string) $pharmacie->ID ] = $pharmacie->post_title;
+	}
+
+	return $options;
+}
+
+/**
+ * Rappelle où se désigne la pharmacie de garde.
+ *
+ * Les fiches ne portent plus de dates : sans ce rappel, rien sur cet écran
+ * n'indique où se fait le choix de la garde.
+ */
+function gl_pharmacie_admin_notice(): void {
+	$screen = get_current_screen();
+
+	if ( ! $screen || 'edit-gl_pharmacie' !== $screen->id ) {
+		return;
+	}
+
+	$id      = (int) gl_setting( 'pharmacie_garde' );
+	$titre   = $id ? get_the_title( $id ) : '';
+	$reglage = admin_url( 'admin.php?page=gl-settings' );
+
+	$message = $titre
+		/* translators: %s : nom de la pharmacie de garde. */
+		? sprintf( __( 'Pharmacie de garde affichée sur le site : <strong>%s</strong>.', 'grand-lahou' ), esc_html( $titre ) )
+		: __( 'Aucune pharmacie de garde n\'est affichée sur le site actuellement.', 'grand-lahou' );
+
+	printf(
+		'<div class="notice notice-info"><p>%s %s</p></div>',
+		wp_kses_post( $message ),
+		wp_kses_post( sprintf(
+			/* translators: %s : URL de l'écran de réglages. */
+			__( 'Ces fiches ne servent qu\'aux coordonnées : la garde se désigne dans <a href="%s">Mairie → Pharmacie de garde</a>, et ne change pas toute seule.', 'grand-lahou' ),
+			esc_url( $reglage )
+		) )
+	);
+}
+add_action( 'admin_notices', 'gl_pharmacie_admin_notice' );
+
+/**
+ * Retourne les options d'un champ de type liste.
+ *
+ * @param array $field Définition du champ.
+ * @return array<string, string>
+ */
+function gl_field_options( array $field ): array {
+	if ( ! empty( $field['options_cb'] ) && is_callable( $field['options_cb'] ) ) {
+		return (array) call_user_func( $field['options_cb'] );
+	}
+
+	return (array) ( $field['options'] ?? array() );
 }
 
 /**
@@ -269,6 +355,14 @@ function gl_sanitize_settings( $input ): array {
 					break;
 				case 'image':
 					$clean[ $key ] = (string) absint( $raw );
+					break;
+				case 'select':
+					// La valeur doit figurer parmi les options proposées : une
+					// pharmacie supprimée entre l'affichage du formulaire et
+					// son envoi ne doit pas rester enregistrée.
+					$clean[ $key ] = array_key_exists( (string) $raw, gl_field_options( $field ) )
+						? (string) $raw
+						: '';
 					break;
 				default:
 					$clean[ $key ] = sanitize_text_field( $raw );
@@ -354,6 +448,17 @@ function gl_render_settings_page(): void {
 									<textarea id="<?php echo esc_attr( $id ); ?>"
 										name="<?php echo esc_attr( $name ); ?>" rows="3" class="large-text"
 										placeholder="<?php echo esc_attr( $field['placeholder'] ?? '' ); ?>"><?php echo esc_textarea( (string) $value ); ?></textarea>
+
+								<?php elseif ( 'select' === $field['type'] ) : ?>
+									<select id="<?php echo esc_attr( $id ); ?>"
+										name="<?php echo esc_attr( $name ); ?>">
+										<?php foreach ( gl_field_options( $field ) as $option_value => $option_label ) : ?>
+											<option value="<?php echo esc_attr( (string) $option_value ); ?>"
+												<?php selected( (string) $value, (string) $option_value ); ?>>
+												<?php echo esc_html( $option_label ); ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
 
 								<?php elseif ( 'image' === $field['type'] ) : ?>
 									<input type="hidden" id="<?php echo esc_attr( $id ); ?>"

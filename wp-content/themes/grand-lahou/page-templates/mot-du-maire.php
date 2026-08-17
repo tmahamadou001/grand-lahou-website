@@ -5,7 +5,7 @@
  * Portrait du maire à gauche, message à droite.
  *
  * Le nom, la fonction et la photo viennent de la fiche du maire dans
- * « Conseil municipal » (celle dont la case « C'est le maire » est cochée) :
+ * « Les élus » (celle dont la case « C'est le maire » est cochée) :
  * l'agent ne saisit ces informations qu'une seule fois. Le message lui-même
  * est le contenu de cette page.
  *

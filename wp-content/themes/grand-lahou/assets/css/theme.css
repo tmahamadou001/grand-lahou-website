@@ -1914,32 +1914,88 @@ a.gl-card:hover { border-color: var(--gl-lagoon-500); }
   .gl-mayor__name { font-size: 26px; }
 }
 
-/* Conseil municipal */
+/* Les élus */
 
-.gl-council {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.gl-elus-groupe { margin-bottom: 44px; }
+.gl-elus-groupe:last-child { margin-bottom: 0; }
+
+.gl-elus-groupe__titre {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 21px;
+  color: var(--gl-ink-900);
+  margin: 0 0 6px;
 }
-.gl-council__card {
+/* Même tiret que les surtitres du reste du site : une forme pleine, et non
+   un pictogramme au trait fin, qui tient le doré sur fond clair. */
+.gl-elus-groupe__bar {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--gl-sun-600);
+  flex: 0 0 auto;
+}
+.gl-elus-groupe__intro {
+  font-size: 14.5px;
+  color: var(--gl-ink-600);
+  margin: 0;
+  max-width: 560px;
+}
+
+.gl-elus {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px 20px;
+  margin-top: 22px;
+}
+.gl-elus__card {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  text-align: center;
+  gap: 10px;
 }
-.gl-council__photo { width: 84px; height: 84px; }
-.gl-council__name { font-size: 14px; font-weight: 700; color: var(--gl-ink-900); }
-.gl-council__role { font-size: 12.5px; font-weight: 500; color: var(--gl-ink-400); }
-.gl-council__delegation {
-  font-size: 12.5px;
-  font-weight: 600;
+/* Le portrait occupe toute la colonne : les photos fournies par la mairie
+   n'auront pas toutes le même cadrage, le carré les uniformise. */
+.gl-elus__photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+}
+.gl-elus__name {
+  font-size: 20px;
   color: var(--gl-lagoon-600);
+  text-align: center;
+  margin: 0;
 }
+.gl-elus__role {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--gl-ink-600);
+  text-align: center;
+  margin: 0;
+}
+.gl-elus__more {
+  align-self: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gl-lagoon-600);
+  text-decoration: none;
+}
+.gl-elus__more span[aria-hidden] {
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+.gl-elus__more:hover span[aria-hidden],
+.gl-elus__more:focus-visible span[aria-hidden] { transform: translateX(3px); }
+.gl-elus__more:hover,
+.gl-elus__more:focus-visible { text-decoration: underline; }
 
-@media (min-width: 1080px) {
-  .gl-council { grid-template-columns: repeat(4, 1fr); gap: 28px; }
-  .gl-council__photo { width: 104px; height: 104px; }
+@media (min-width: 720px) {
+  .gl-elus { grid-template-columns: repeat(3, 1fr); gap: 32px 28px; }
+  .gl-elus-groupe { margin-bottom: 56px; }
+  .gl-elus-groupe__titre { font-size: 26px; }
+  /* Le tiret suit le titre : à 26 px, 24 px de large paraissent maigres. */
+  .gl-elus-groupe__bar { width: 32px; }
 }
 
 /* --- Contact -------------------------------------------------------------- */
@@ -2320,6 +2376,8 @@ a.gl-card:hover { border-color: var(--gl-lagoon-500); }
 .gl-page-header__title,
 .gl-subtitle,
 .gl-mayor__name,
+.gl-elus-groupe__titre,
+.gl-elus__name,
 .gl-newsletter__title,
 .gl-figure__value {
   font-family: var(--gl-font-display);

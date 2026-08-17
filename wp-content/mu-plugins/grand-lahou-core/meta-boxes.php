@@ -213,17 +213,8 @@ function gl_field_definitions(): array {
 			),
 		),
 		'gl_pharmacie' => array(
-			'title'  => __( 'Garde et coordonnées', 'grand-lahou' ),
+			'title'  => __( 'Coordonnées', 'grand-lahou' ),
 			'fields' => array(
-				'gl_pharmacie_debut'   => array(
-					'label' => __( 'Début de la garde', 'grand-lahou' ),
-					'type'  => 'date',
-					'help'  => __( 'La pharmacie est mise en avant sur le site entre ces deux dates, incluses.', 'grand-lahou' ),
-				),
-				'gl_pharmacie_fin'     => array(
-					'label' => __( 'Fin de la garde', 'grand-lahou' ),
-					'type'  => 'date',
-				),
 				'gl_pharmacie_adresse' => array(
 					'label'       => __( 'Adresse', 'grand-lahou' ),
 					'type'        => 'text',

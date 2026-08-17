@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * À incrémenter dès qu'un slug ou un type de contenu change, pour que les
  * permaliens soient recalculés au prochain passage dans l'administration.
  */
-const GL_CORE_REWRITE_VERSION = '1.4.0';
+const GL_CORE_REWRITE_VERSION = '1.5.0';
 
 /**
  * Déclare les types de contenu propres à la mairie.
@@ -89,14 +89,14 @@ function gl_register_post_types(): void {
 			'add_new_item'  => __( 'Ajouter un élu', 'grand-lahou' ),
 			'edit_item'     => __( 'Modifier l\'élu', 'grand-lahou' ),
 			'not_found'     => __( 'Aucun élu', 'grand-lahou' ),
-			'menu_name'     => __( 'Conseil municipal', 'grand-lahou' ),
+			'menu_name'     => __( 'Les élus', 'grand-lahou' ),
 		),
 		'public'        => true,
 		'has_archive'   => false,
 		'menu_icon'     => 'dashicons-businessperson',
 		'menu_position' => 24,
 		'supports'      => array( 'title', 'editor', 'thumbnail', 'page-attributes' ),
-		'rewrite'       => array( 'slug' => 'conseil-municipal' ),
+		'rewrite'       => array( 'slug' => 'elus' ),
 		'show_in_rest'  => true,
 	) );
 
@@ -169,7 +169,7 @@ function gl_register_post_types(): void {
 	// Pharmacies de garde, avec leur période de permanence.
 	register_post_type( 'gl_pharmacie', array(
 		'labels'              => array(
-			'name'          => __( 'Pharmacies de garde', 'grand-lahou' ),
+			'name'          => __( 'Pharmacies', 'grand-lahou' ),
 			'singular_name' => __( 'Pharmacie', 'grand-lahou' ),
 			'add_new_item'  => __( 'Ajouter une pharmacie', 'grand-lahou' ),
 			'edit_item'     => __( 'Modifier la pharmacie', 'grand-lahou' ),
@@ -267,6 +267,31 @@ function gl_register_taxonomies(): void {
 		'show_admin_column' => true,
 		'show_in_rest'      => true,
 		'rewrite'           => array( 'slug' => 'decouvrir' ),
+	) );
+
+	/*
+	 * Catégories d'élus : ce sont les sections de la page « Les élus »
+	 * (le maire, les adjoints, les conseillers…). La mairie les crée et les
+	 * ordonne elle-même, ce qui permet de suivre l'organisation réelle du
+	 * conseil sans intervention technique.
+	 *
+	 * Pas d'archive publique : ces catégories structurent une page existante,
+	 * une page par catégorie ferait doublon. Et une seule case à cocher, via
+	 * meta_box_cb : un élu affiché dans deux sections apparaîtrait deux fois.
+	 */
+	register_taxonomy( 'gl_categorie_elu', array( 'gl_elu' ), array(
+		'labels'            => array(
+			'name'          => __( 'Catégories d\'élus', 'grand-lahou' ),
+			'singular_name' => __( 'Catégorie d\'élus', 'grand-lahou' ),
+			'add_new_item'  => __( 'Ajouter une catégorie', 'grand-lahou' ),
+			'menu_name'     => __( 'Catégories', 'grand-lahou' ),
+		),
+		'public'            => false,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'hierarchical'      => true,
+		'show_in_rest'      => true,
+		'meta_box_cb'       => 'gl_metabox_categorie_elu',
 	) );
 }
 add_action( 'init', 'gl_register_taxonomies' );

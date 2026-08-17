@@ -27,7 +27,7 @@ function gl_fallback_menu(): void {
 			'url'      => '#',
 			'children' => array(
 				array( 'label' => __( 'Mot du maire', 'grand-lahou' ), 'url' => home_url( '/mot-du-maire/' ) ),
-				array( 'label' => __( 'Conseil municipal', 'grand-lahou' ), 'url' => home_url( '/conseil-municipal/' ) ),
+				array( 'label' => __( 'Les élus', 'grand-lahou' ), 'url' => home_url( '/les-elus/' ) ),
 				array( 'label' => __( 'Organigramme', 'grand-lahou' ), 'url' => home_url( '/organigramme/' ) ),
 				array( 'label' => __( 'Histoire de la commune', 'grand-lahou' ), 'url' => home_url( '/histoire/' ) ),
 			),

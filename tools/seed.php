@@ -104,6 +104,29 @@ foreach ( array_unique( array_map( 'intval', $obsoletes ) ) as $obsolete_id ) {
 	wp_delete_post( $obsolete_id, true );
 }
 
+/*
+ * « Conseil municipal » est devenue « Les élus ». La page est renommée plutôt
+ * que recréée : sans cela, une installation déjà alimentée se retrouverait
+ * avec les deux pages, l'ancienne conservant le contenu rédigé par la mairie.
+ */
+$ancienne_page = get_posts( array(
+	'post_type'      => 'page',
+	'name'           => 'conseil-municipal',
+	'post_status'    => 'any',
+	'posts_per_page' => 1,
+	'fields'         => 'ids',
+) );
+
+if ( $ancienne_page ) {
+	wp_update_post( array(
+		'ID'         => (int) $ancienne_page[0],
+		'post_name'  => 'les-elus',
+		'post_title' => 'Les élus',
+	) );
+	update_post_meta( (int) $ancienne_page[0], '_wp_page_template', 'page-templates/les-elus.php' );
+	WP_CLI::log( '  Page « Conseil municipal » renommée en « Les élus ».' );
+}
+
 if ( $obsoletes ) {
 	WP_CLI::log( sprintf( '  %d contenu(s) obsolète(s) supprimé(s).', count( $obsoletes ) ) );
 }
@@ -172,11 +195,11 @@ $pages = array(
 		'Le mot du maire de la commune de Grand-Lahou.',
 		'page-templates/mot-du-maire.php',
 	),
-	'conseil-municipal' => array(
-		'Conseil municipal',
+	'les-elus' => array(
+		'Les élus',
 		"Composition du conseil municipal de Grand-Lahou — liste des élus à compléter.",
-		'Composition et rôle du conseil municipal.',
-		'page-templates/conseil-municipal.php',
+		'Les élus de la commune de Grand-Lahou.',
+		'page-templates/les-elus.php',
 	),
 	'organigramme' => array(
 		'Organigramme',
@@ -511,20 +534,43 @@ foreach ( $services as list( $slug, $title, $responsable, $tel, $email, $horaire
 	) );
 }
 
-WP_CLI::log( 'Conseil municipal…' );
+WP_CLI::log( 'Les élus…' );
 
-$elus = array(
-	array( 'le-maire', 'Nom Prénom', 'Maire de la commune de Grand-Lahou', '', 0, true ),
-	array( 'premier-adjoint', 'Nom Prénom', '1er adjoint au maire', 'Travaux et urbanisme', 1, false ),
-	array( 'deuxieme-adjoint', 'Nom Prénom', '2e adjoint au maire', 'Éducation et jeunesse', 2, false ),
-	array( 'troisieme-adjoint', 'Nom Prénom', '3e adjoint au maire', 'Affaires sociales', 3, false ),
-	array( 'conseiller-1', 'Nom Prénom', 'Conseiller municipal', '', 4, false ),
-	array( 'conseiller-2', 'Nom Prénom', 'Conseiller municipal', '', 5, false ),
-	array( 'conseillere-1', 'Nom Prénom', 'Conseillère municipale', '', 6, false ),
-	array( 'conseillere-2', 'Nom Prénom', 'Conseillère municipale', '', 7, false ),
+// Sections de la page « Les élus ». La mairie peut les renommer, en ajouter ou
+// en retirer : l'ordre d'affichage tient au champ « Ordre », pas au code.
+$categories_elus = array(
+	'le-maire'              => array( 'Monsieur le Maire', 1 ),
+	'adjoints'              => array( 'Les adjoints au maire', 2 ),
+	'conseillers-delegues'  => array( 'Les conseillers municipaux délégués', 3 ),
+	'conseillers'           => array( 'Les conseillers municipaux', 4 ),
 );
 
-foreach ( $elus as list( $slug, $title, $fonction, $delegation, $ordre, $est_maire ) ) {
+foreach ( $categories_elus as $slug_cat => list( $nom_cat, $ordre_cat ) ) {
+	$terme = term_exists( $slug_cat, 'gl_categorie_elu' );
+
+	if ( ! $terme ) {
+		$terme = wp_insert_term( $nom_cat, 'gl_categorie_elu', array( 'slug' => $slug_cat ) );
+	}
+
+	if ( ! is_wp_error( $terme ) ) {
+		update_term_meta( (int) $terme['term_id'], 'gl_ordre', $ordre_cat );
+	}
+}
+
+$elus = array(
+	array( 'le-maire', 'Nom Prénom', 'Maire de la commune de Grand-Lahou', '', 0, true, 'le-maire' ),
+	array( 'premier-adjoint', 'Nom Prénom', '1er adjoint au maire', 'Travaux et urbanisme', 1, false, 'adjoints' ),
+	array( 'deuxieme-adjoint', 'Nom Prénom', '2e adjoint au maire', 'Éducation et jeunesse', 2, false, 'adjoints' ),
+	array( 'troisieme-adjoint', 'Nom Prénom', '3e adjoint au maire', 'Affaires sociales', 3, false, 'adjoints' ),
+	array( 'conseiller-delegue-1', 'Nom Prénom', 'Conseiller municipal délégué', 'Vie associative et sports', 4, false, 'conseillers-delegues' ),
+	array( 'conseillere-deleguee-1', 'Nom Prénom', 'Conseillère municipale déléguée', 'Culture et patrimoine', 5, false, 'conseillers-delegues' ),
+	array( 'conseiller-1', 'Nom Prénom', 'Conseiller municipal', '', 6, false, 'conseillers' ),
+	array( 'conseiller-2', 'Nom Prénom', 'Conseiller municipal', '', 7, false, 'conseillers' ),
+	array( 'conseillere-1', 'Nom Prénom', 'Conseillère municipale', '', 8, false, 'conseillers' ),
+	array( 'conseillere-2', 'Nom Prénom', 'Conseillère municipale', '', 9, false, 'conseillers' ),
+);
+
+foreach ( $elus as list( $slug, $title, $fonction, $delegation, $ordre, $est_maire, $categorie ) ) {
 	$meta = array(
 		'gl_elu_fonction'   => $fonction,
 		'gl_elu_delegation' => $delegation,
@@ -532,10 +578,14 @@ foreach ( $elus as list( $slug, $title, $fonction, $delegation, $ordre, $est_mai
 	if ( $est_maire ) {
 		$meta['gl_elu_est_maire'] = '1';
 	}
-	gl_seed_post( 'gl_elu', $slug, array(
+	$elu_id = gl_seed_post( 'gl_elu', $slug, array(
 		'post_title' => $title,
 		'menu_order' => $ordre,
 	), $meta );
+
+	if ( $elu_id ) {
+		wp_set_object_terms( $elu_id, $categorie, 'gl_categorie_elu' );
+	}
 }
 
 WP_CLI::log( 'Catégories de lieux et points d\'intérêt…' );
@@ -622,29 +672,44 @@ foreach ( $questions as list( $slug, $titre, $reponse, $emplacement, $ordre ) ) 
 	) );
 }
 
-WP_CLI::log( 'Pharmacies de garde…' );
+WP_CLI::log( 'Pharmacies…' );
 
-// Les périodes sont calculées à partir d'aujourd'hui : la garde en cours reste
-// toujours en cours, quelle que soit la date d'exécution du script.
-$lundi = strtotime( 'monday this week', current_time( 'timestamp' ) );
-
+// Une pharmacie ne porte que ses coordonnées. Celle qui est de garde est
+// désignée dans l'écran « Mairie » et le reste jusqu'au changement suivant.
 $pharmacies = array(
-	array( 'pharmacie-de-la-lagune', 'Pharmacie de la Lagune', 'Boulevard de la Lagune, face au marché central', '+225 27 22 00 02 10', 0 ),
-	array( 'pharmacie-du-phare', 'Pharmacie du Phare', 'Quartier Lopez, près de l\'école primaire', '+225 27 22 00 02 11', 7 ),
-	array( 'pharmacie-bandama', 'Pharmacie Bandama', 'Route de Lahou-Kpanda', '+225 27 22 00 02 12', 14 ),
-	array( 'pharmacie-centrale', 'Pharmacie Centrale', 'Place de l\'Hôtel de ville', '+225 27 22 00 02 13', 21 ),
+	array( 'pharmacie-de-la-lagune', 'Pharmacie de la Lagune', 'Boulevard de la Lagune, face au marché central', '+225 27 22 00 02 10' ),
+	array( 'pharmacie-du-phare', 'Pharmacie du Phare', 'Quartier Lopez, près de l\'école primaire', '+225 27 22 00 02 11' ),
+	array( 'pharmacie-bandama', 'Pharmacie Bandama', 'Route de Lahou-Kpanda', '+225 27 22 00 02 12' ),
+	array( 'pharmacie-centrale', 'Pharmacie Centrale', 'Place de l\'Hôtel de ville', '+225 27 22 00 02 13' ),
 );
 
-foreach ( $pharmacies as list( $slug, $nom, $adresse, $tel, $decalage ) ) {
-	$debut = strtotime( "+{$decalage} days", $lundi );
-	gl_seed_post( 'gl_pharmacie', $slug, array(
+$premiere_pharmacie = 0;
+
+foreach ( $pharmacies as list( $slug, $nom, $adresse, $tel ) ) {
+	$pharmacie_id = gl_seed_post( 'gl_pharmacie', $slug, array(
 		'post_title' => $nom,
 	), array(
-		'gl_pharmacie_debut'   => gmdate( 'Y-m-d', $debut ),
-		'gl_pharmacie_fin'     => gmdate( 'Y-m-d', strtotime( '+6 days', $debut ) ),
 		'gl_pharmacie_adresse' => $adresse,
 		'gl_pharmacie_tel'     => $tel,
 	) );
+
+	// Les dates de garde de l'ancienne version n'ont plus de sens : on les
+	// retire, sinon elles resteraient en base sans que rien ne les lise.
+	delete_post_meta( $pharmacie_id, 'gl_pharmacie_debut' );
+	delete_post_meta( $pharmacie_id, 'gl_pharmacie_fin' );
+
+	if ( ! $premiere_pharmacie ) {
+		$premiere_pharmacie = $pharmacie_id;
+	}
+}
+
+// On ne désigne une pharmacie de garde que si l'agent n'en a pas déjà choisi
+// une : relancer le script ne doit pas écraser la garde en cours.
+$reglages = get_option( 'gl_settings', array() );
+
+if ( $premiere_pharmacie && empty( $reglages['pharmacie_garde'] ) ) {
+	$reglages['pharmacie_garde'] = (string) $premiere_pharmacie;
+	update_option( 'gl_settings', $reglages );
 }
 
 WP_CLI::log( 'Numéros utiles…' );
@@ -710,7 +775,7 @@ function gl_seed_menu( string $name, string $location, array $items ): void {
 gl_seed_menu( 'Menu principal', 'primary', array(
 	array( 'La mairie', '#' ),
 	array( 'Mot du maire', home_url( '/mot-du-maire/' ), 'La mairie' ),
-	array( 'Conseil municipal', home_url( '/conseil-municipal/' ), 'La mairie' ),
+	array( 'Les élus', home_url( '/les-elus/' ), 'La mairie' ),
 	array( 'Organigramme', home_url( '/organigramme/' ), 'La mairie' ),
 	array( 'Histoire de la commune', home_url( '/histoire/' ), 'La mairie' ),
 	array( 'Actualités', get_permalink( $actualites ) ),

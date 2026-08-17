@@ -431,6 +431,64 @@ function gl_breadcrumb( string $section = '' ): void {
 }
 
 /**
+ * Regroupe les élus par catégorie, dans l'ordre choisi par la mairie.
+ *
+ * Les élus rattachés à aucune catégorie sont réunis en fin de liste sous une
+ * section sans titre : une fiche mal renseignée reste visible sur le site
+ * plutôt que de disparaître sans que personne s'en aperçoive.
+ *
+ * @return array<int, array{terme: ?WP_Term, elus: WP_Post[]}>
+ */
+function gl_elus_par_categorie(): array {
+	$sections = array();
+
+	foreach ( gl_categories_elu( true ) as $categorie ) {
+		$elus = get_posts( array(
+			'post_type'      => 'gl_elu',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'orderby'        => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
+			'tax_query'      => array(
+				array(
+					'taxonomy' => 'gl_categorie_elu',
+					'field'    => 'term_id',
+					'terms'    => $categorie->term_id,
+				),
+			),
+		) );
+
+		if ( $elus ) {
+			$sections[] = array(
+				'terme' => $categorie,
+				'elus'  => $elus,
+			);
+		}
+	}
+
+	$orphelins = get_posts( array(
+		'post_type'      => 'gl_elu',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'orderby'        => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
+		'tax_query'      => array(
+			array(
+				'taxonomy' => 'gl_categorie_elu',
+				'operator' => 'NOT EXISTS',
+			),
+		),
+	) );
+
+	if ( $orphelins ) {
+		$sections[] = array(
+			'terme' => null,
+			'elus'  => $orphelins,
+		);
+	}
+
+	return $sections;
+}
+
+/**
  * Récupère les questions fréquentes à afficher sur une page donnée.
  *
  * @param string $emplacement « demarches » ou « contact ».
@@ -492,61 +550,53 @@ function gl_render_faq( array $questions, string $titre = '' ): void {
 }
 
 /**
- * Retourne la pharmacie de garde aujourd'hui.
+ * Retourne la pharmacie de garde en cours.
+ *
+ * Elle est désignée à la main dans l'écran « Mairie », et le reste jusqu'à ce
+ * qu'un agent en choisisse une autre. Aucun calendrier n'est tenu : un planning
+ * saisi à l'avance finit toujours par se périmer sans que personne s'en
+ * aperçoive, et affiche alors une garde fausse un soir d'urgence.
  *
  * @return WP_Post|null
  */
 function gl_pharmacie_de_garde(): ?WP_Post {
-	$aujourdhui = current_time( 'Y-m-d' );
+	$id = (int) gl_setting( 'pharmacie_garde' );
 
-	$trouvees = get_posts( array(
-		'post_type'      => 'gl_pharmacie',
-		'posts_per_page' => 1,
-		'post_status'    => 'publish',
-		'meta_key'       => 'gl_pharmacie_debut',
-		'orderby'        => 'meta_value',
-		'order'          => 'DESC',
-		'meta_query'     => array(
-			array(
-				'key'     => 'gl_pharmacie_debut',
-				'value'   => $aujourdhui,
-				'compare' => '<=',
-				'type'    => 'DATE',
-			),
-			array(
-				'key'     => 'gl_pharmacie_fin',
-				'value'   => $aujourdhui,
-				'compare' => '>=',
-				'type'    => 'DATE',
-			),
-		),
-	) );
+	if ( ! $id ) {
+		return null;
+	}
 
-	return $trouvees ? $trouvees[0] : null;
+	$pharmacie = get_post( $id );
+
+	// La pharmacie désignée a pu être mise à la corbeille depuis : mieux vaut
+	// ne rien afficher qu'un bloc vide portant le nom d'un contenu supprimé.
+	if ( ! $pharmacie || 'gl_pharmacie' !== $pharmacie->post_type || 'publish' !== $pharmacie->post_status ) {
+		return null;
+	}
+
+	return $pharmacie;
 }
 
 /**
- * Retourne les gardes à venir, après celle en cours.
+ * Retourne les autres pharmacies de la commune.
  *
- * @param int $nombre Nombre de gardes souhaité.
+ * Celle de garde en est exclue : elle occupe déjà l'encadré au-dessus. Cette
+ * liste ne dit pas qui sera de garde ensuite — il n'y a pas de planning — mais
+ * elle reste utile, un habitant y trouve le numéro de la pharmacie de son
+ * quartier.
+ *
  * @return WP_Post[]
  */
-function gl_pharmacies_a_venir( int $nombre = 3 ): array {
+function gl_autres_pharmacies(): array {
+	$garde = gl_pharmacie_de_garde();
+
 	return get_posts( array(
 		'post_type'      => 'gl_pharmacie',
-		'posts_per_page' => $nombre,
+		'posts_per_page' => -1,
 		'post_status'    => 'publish',
-		'meta_key'       => 'gl_pharmacie_debut',
-		'orderby'        => 'meta_value',
+		'orderby'        => 'title',
 		'order'          => 'ASC',
-		'meta_query'     => array(
-			array(
-				'key'     => 'gl_pharmacie_debut',
-				'value'   => current_time( 'Y-m-d' ),
-				'compare' => '>',
-				'type'    => 'DATE',
-			),
-		),
+		'exclude'        => $garde ? array( $garde->ID ) : array(),
 	) );
 }
 

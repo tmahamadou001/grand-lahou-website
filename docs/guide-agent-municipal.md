@@ -163,22 +163,49 @@ au-dessus du formulaire, et c'est autant de messages en moins à traiter.
 
 ## La pharmacie de garde
 
-Le site met en avant la pharmacie en service, et affiche les gardes suivantes.
+Le site met en avant la pharmacie en service. Cela se fait en deux temps :
+les pharmacies sont enregistrées une fois pour toutes, puis vous désignez
+celle qui est de garde.
+
+### Enregistrer les pharmacies de la commune
+
+À faire une seule fois, puis à compléter si une nouvelle pharmacie ouvre.
 
 1. Menu de gauche : **Pharmacies → Ajouter une pharmacie**.
 2. Le **titre** est le nom de la pharmacie.
-3. Sous l'éditeur, renseignez le **début** et la **fin** de la garde, l'adresse
-   et le téléphone.
+3. Sous l'éditeur, renseignez l'**adresse** et le **téléphone**.
 4. **Publier**.
 
-La pharmacie s'affiche automatiquement en haut de la page Services pendant sa
-période, puis laisse la place à la suivante. Vous n'avez rien à faire au
-changement de semaine.
+Il n'y a aucune date à saisir : une pharmacie enregistrée reste simplement
+disponible dans la liste.
 
-**Conseil :** saisissez le planning sur un ou deux mois d'avance. Les visiteurs
-voient les prochaines gardes, et vous n'avez pas à y penser chaque lundi. Si
-aucune garde ne couvre le jour en cours, le site invite à appeler la mairie —
-mieux vaut donc ne pas laisser de trou dans le calendrier.
+### Désigner la pharmacie de garde
+
+C'est la seule manipulation à faire à chaque relève.
+
+1. Menu de gauche : **Mairie**.
+2. Section **Pharmacie de garde**, choisissez la pharmacie dans la liste
+   déroulante.
+3. **Enregistrer les modifications**.
+
+Elle s'affiche aussitôt en haut de la page Services, avec son adresse et son
+numéro cliquable, et **y reste tant que vous n'en choisissez pas une autre**.
+Les autres pharmacies de la commune sont listées juste en dessous, avec leur
+adresse et leur téléphone : un habitant qui cherche la pharmacie de son
+quartier la trouve sans quitter la page.
+
+> **À retenir :** le site ne change pas de pharmacie tout seul. Si personne ne
+> met la liste à jour, l'ancienne reste affichée. C'est un choix assumé : un
+> planning saisi à l'avance finit toujours par se périmer, et affiche alors une
+> garde fausse un soir d'urgence — ce qui est pire que pas d'information du
+> tout. Prenez l'habitude de changer ce réglage le jour de la relève.
+
+**S'il n'y a pas de garde organisée**, choisissez **« — Aucune pharmacie de
+garde — »** : l'encadré de mise en avant disparaît, mais la liste des
+pharmacies de la commune reste affichée. Personne ne repart bredouille.
+
+Si vous mettez à la corbeille la pharmacie actuellement désignée, l'encadré
+disparaît de la même façon, plutôt que d'afficher un nom qui n'existe plus.
 
 ---
 
@@ -263,16 +290,21 @@ la fiche.
 
 ---
 
-## Gérer le conseil municipal
+## Gérer les élus
 
-La page « Conseil municipal » se construit toute seule à partir des fiches
-d'élus. Vous en ajoutez et vous en retirez librement.
+La page « Les élus » se construit toute seule à partir des fiches d'élus. Vous
+en ajoutez et vous en retirez librement.
 
-1. Menu de gauche : **Conseil municipal**.
+Elle est découpée en **sections** — Monsieur le Maire, Les adjoints au maire,
+Les conseillers municipaux délégués, Les conseillers municipaux. Chaque élu est
+rangé dans l'une d'elles. Ces sections sont modifiables : voir « Créer ou
+renommer une section » plus bas.
+
+1. Menu de gauche : **Les élus**.
 2. **Ajouter un élu**, ou cliquez sur une fiche existante.
 3. Le **titre** de la fiche est le nom de la personne.
 4. Ajoutez son portrait en **Image mise en avant** (à droite). La photo
-   s'affiche dans un cercle : cadrez sur le visage.
+   s'affiche dans un carré aux angles arrondis : cadrez sur le visage.
 
    Pour le maire, cette photo alimente aussi la page « Mot du maire » — sauf si
    vous avez mis une image mise en avant directement sur cette page, auquel cas
@@ -283,14 +315,39 @@ d'élus. Vous en ajoutez et vous en retirez librement.
    - **C'est le maire de la commune** — à cocher **uniquement pour le maire**.
      Sa photo et son nom alimentent alors automatiquement la page « Mot du
      maire ».
-6. **Publier**.
+6. À droite, dans **Catégories d'élus**, cochez la section où doit figurer
+   cette personne. Une seule est possible : c'est voulu, un élu affiché dans
+   deux sections apparaîtrait deux fois sur la page.
+7. Si vous voulez écrire une **biographie**, rédigez-la dans l'éditeur. Un lien
+   « Lire la suite » apparaît alors sous le portrait. Si vous laissez
+   l'éditeur vide, aucun lien ne s'affiche : rien à faire pour l'éviter.
+8. **Publier**.
 
-**Pour changer l'ordre d'affichage :** dans le bloc **Attributs de page** (à
-droite), mettez un nombre dans **Ordre**. Le maire à `0`, le 1er adjoint à `1`,
-et ainsi de suite. Les fiches s'affichent du plus petit au plus grand.
+**Pour changer l'ordre à l'intérieur d'une section :** dans le bloc
+**Attributs de page** (à droite), mettez un nombre dans **Ordre**. Le 1er
+adjoint à `1`, le 2e à `2`, et ainsi de suite. Les fiches s'affichent du plus
+petit au plus grand.
 
 **Pour retirer un élu :** ouvrez sa fiche et cliquez sur **Mettre à la
 corbeille**. Il disparaît immédiatement de la page.
+
+### Créer ou renommer une section
+
+1. Menu de gauche : **Les élus**, puis **Catégories**.
+2. À gauche, le formulaire **Ajouter une catégorie** : saisissez le **nom** tel
+   qu'il apparaîtra comme titre de section (par exemple `Les conseillers
+   municipaux délégués`).
+3. **Ordre d'affichage** — le nombre qui décide de la place de la section sur
+   la page : `1` pour le maire, `2` pour les adjoints, et ainsi de suite. Les
+   sections vont du plus petit au plus grand.
+4. La **description** est facultative : si vous en écrivez une, elle s'affiche
+   en petit sous le titre de la section.
+
+Pour renommer une section, cliquez simplement dessus dans la liste de droite.
+Le titre change sur le site, les élus qu'elle contient ne bougent pas.
+
+> Une section vide ne s'affiche pas sur le site : vous pouvez la créer à
+> l'avance sans que cela laisse un titre orphelin sur la page.
 
 ---
 

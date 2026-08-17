@@ -39,6 +39,14 @@ function gl_handle_newsletter_form(): void {
 		exit;
 	}
 
+	// Plafond par adresse IP. Plus strict que le formulaire de contact : une
+	// même personne n'a aucune raison de s'inscrire trois fois de suite, et
+	// chaque inscription crée une entrée en base.
+	if ( ! gl_debit_autorise( 'newsletter', 3, HOUR_IN_SECONDS ) ) {
+		wp_safe_redirect( add_query_arg( 'newsletter', 'trop', $redirect ) . '#newsletter' );
+		exit;
+	}
+
 	$email = sanitize_email( wp_unslash( $_POST['gl_newsletter_email'] ?? '' ) );
 
 	if ( ! is_email( $email ) ) {
@@ -88,6 +96,11 @@ function gl_newsletter_feedback(): ?array {
 			return array(
 				'type'  => 'erreur',
 				'texte' => __( 'Cette adresse e-mail ne semble pas valide.', 'grand-lahou' ),
+			);
+		case 'trop':
+			return array(
+				'type'  => 'erreur',
+				'texte' => __( 'Trop de tentatives d\'inscription. Merci de patienter un moment avant de réessayer.', 'grand-lahou' ),
 			);
 		case 'erreur':
 			return array(
