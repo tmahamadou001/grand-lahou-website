@@ -93,7 +93,14 @@ $gl_numeros = new WP_Query( array(
 	</div>
 </section>
 
+<?php
+// Placée avant les numéros utiles : c'est l'information la plus cherchée en
+// urgence de toute cette page.
+get_template_part( 'template-parts/pharmacie-de-garde' );
+?>
+
 <?php if ( $gl_numeros->have_posts() ) : ?>
+	<?php gl_fond_derniere_section( 'alt' ); ?>
 	<section class="gl-section gl-section--alt">
 		<div class="gl-container">
 			<h2 class="gl-section__title"><?php esc_html_e( 'Numéros utiles', 'grand-lahou' ); ?></h2>

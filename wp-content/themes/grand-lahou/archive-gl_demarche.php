@@ -59,4 +59,26 @@ get_header();
 </section>
 
 <?php
+$gl_questions = gl_faq_items( 'demarches' );
+if ( $gl_questions ) :
+	// La page se termine désormais sur une section bleu pâle.
+	gl_fond_derniere_section( 'alt' );
+	gl_wave( 'vers-actualites' );
+	?>
+	<section id="faq" class="gl-section gl-section--alt">
+		<div class="gl-container">
+			<p class="gl-kicker-row">
+				<span class="gl-kicker-row__bar" aria-hidden="true"></span>
+				<span class="gl-kicker-row__text"><?php esc_html_e( 'Vous vous demandez', 'grand-lahou' ); ?></span>
+			</p>
+			<h2 class="gl-section__title"><?php esc_html_e( 'Questions fréquentes', 'grand-lahou' ); ?></h2>
+			<p class="gl-section__lead"><?php esc_html_e( 'Les réponses aux questions le plus souvent posées au guichet.', 'grand-lahou' ); ?></p>
+			<?php gl_render_faq( $gl_questions ); ?>
+		</div>
+	</section>
+	<?php
+endif;
+?>
+
+<?php
 get_footer();

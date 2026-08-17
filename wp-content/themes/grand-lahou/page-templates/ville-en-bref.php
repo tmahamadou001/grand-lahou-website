@@ -62,6 +62,7 @@ while ( have_posts() ) :
 		</section>
 
 		<?php if ( $gl_galerie ) : ?>
+			<?php gl_fond_derniere_section( 'alt' ); ?>
 			<section id="galerie" class="gl-section gl-section--alt">
 				<div class="gl-container">
 					<h2 class="gl-subtitle"><?php esc_html_e( 'Galerie photo', 'grand-lahou' ); ?></h2>

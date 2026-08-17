@@ -31,13 +31,24 @@ $gl_dernieres = get_posts( array(
 </main>
 
 <?php
-// Seule la page d'accueil se termine sur la section bleu nuit « Découvrir » ;
-// ailleurs, la vague se pose sur du blanc. Elle est peinte de la couleur du
-// bloc qui suit : le sable de la newsletter, ou le pied de page si le bandeau
-// d'inscription est masqué.
+/*
+ * La vague est peinte de la couleur du bloc qui SUIT — sable de la newsletter,
+ * ou pied de page si le bandeau est masqué — et posée sur le fond de la section
+ * qui PRÉCÈDE, que chaque gabarit déclare via gl_fond_derniere_section().
+ * Sans cette seconde partie, une bande blanche apparaissait sous les pages se
+ * terminant par une section bleu pâle.
+ */
+$gl_fonds = array(
+	'white' => 'gl-wave--on-white',
+	'alt'   => 'gl-wave--on-alt',
+	'deep'  => 'gl-wave--on-deep',
+);
+$gl_fond  = is_front_page() ? 'deep' : gl_fond_derniere_section();
+
 gl_wave(
-	is_front_page() ? 'vers-pied' : 'vers-pied-clair',
-	gl_setting( 'newsletter_active' ) ? 'gl-wave--fill-sand' : 'gl-wave--fill-ink'
+	'vers-pied',
+	gl_setting( 'newsletter_active' ) ? 'gl-wave--fill-sand' : 'gl-wave--fill-ink',
+	$gl_fonds[ $gl_fond ] ?? 'gl-wave--on-white'
 );
 get_template_part( 'template-parts/newsletter' );
 ?>

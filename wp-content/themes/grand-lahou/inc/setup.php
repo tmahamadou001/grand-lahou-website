@@ -44,6 +44,8 @@ function gl_theme_setup(): void {
 	add_image_size( 'gl-square', 240, 240, true );
 	// Portrait en pied du maire, recadré en 3/4.
 	add_image_size( 'gl-portrait', 480, 640, true );
+	// Format attendu par Facebook et LinkedIn pour l'aperçu d'un partage.
+	add_image_size( 'gl-partage', 1200, 630, true );
 	// Sans recadrage : le logo garde ses proportions dans cette boîte.
 	add_image_size( 'gl-logo', 480, 160, false );
 

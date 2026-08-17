@@ -111,8 +111,11 @@ function gl_register_post_types(): void {
 			'menu_name'     => __( 'Bandeau d\'accueil', 'grand-lahou' ),
 		),
 		'public'             => true,
-		// Une diapositive n'a pas de page à elle : elle ne vit que dans le bandeau.
+		// Une diapositive n'a pas de page à elle : elle ne vit que dans le
+		// bandeau. Sans exclude_from_search, elle remonterait dans les
+		// résultats de recherche vers une adresse inexistante.
 		'publicly_queryable' => false,
+		'exclude_from_search' => true,
 		'has_archive'        => false,
 		'menu_icon'          => 'dashicons-images-alt2',
 		'menu_position'      => 20,
@@ -139,6 +142,48 @@ function gl_register_post_types(): void {
 		// catégories de lieux, sinon les deux jeux d'URL se marchent dessus.
 		'rewrite'       => array( 'slug' => 'lieux' ),
 		'show_in_rest'  => true,
+	) );
+
+	// Questions fréquentes sur les démarches.
+	register_post_type( 'gl_faq', array(
+		'labels'              => array(
+			'name'          => __( 'Questions fréquentes', 'grand-lahou' ),
+			'singular_name' => __( 'Question', 'grand-lahou' ),
+			'add_new_item'  => __( 'Ajouter une question', 'grand-lahou' ),
+			'edit_item'     => __( 'Modifier la question', 'grand-lahou' ),
+			'not_found'     => __( 'Aucune question', 'grand-lahou' ),
+			'menu_name'     => __( 'FAQ', 'grand-lahou' ),
+		),
+		'public'              => true,
+		// Les questions s'affichent en accordéon dans les pages qui les
+		// concernent : une page par question n'aurait aucun intérêt.
+		'publicly_queryable'  => false,
+		'exclude_from_search' => true,
+		'has_archive'         => false,
+		'menu_icon'           => 'dashicons-editor-help',
+		'menu_position'       => 23,
+		'supports'            => array( 'title', 'editor', 'page-attributes' ),
+		'show_in_rest'        => true,
+	) );
+
+	// Pharmacies de garde, avec leur période de permanence.
+	register_post_type( 'gl_pharmacie', array(
+		'labels'              => array(
+			'name'          => __( 'Pharmacies de garde', 'grand-lahou' ),
+			'singular_name' => __( 'Pharmacie', 'grand-lahou' ),
+			'add_new_item'  => __( 'Ajouter une pharmacie', 'grand-lahou' ),
+			'edit_item'     => __( 'Modifier la pharmacie', 'grand-lahou' ),
+			'not_found'     => __( 'Aucune pharmacie', 'grand-lahou' ),
+			'menu_name'     => __( 'Pharmacies', 'grand-lahou' ),
+		),
+		'public'              => true,
+		'publicly_queryable'  => false,
+		'exclude_from_search' => true,
+		'has_archive'         => false,
+		'menu_icon'           => 'dashicons-heart',
+		'menu_position'       => 27,
+		'supports'            => array( 'title' ),
+		'show_in_rest'        => true,
 	) );
 
 	// Inscriptions à la newsletter. Ces adresses sont des données personnelles :
@@ -178,7 +223,10 @@ function gl_register_post_types(): void {
 			'menu_name'     => __( 'Numéros utiles', 'grand-lahou' ),
 		),
 		'public'             => true,
+		// Affiché uniquement dans la liste des services : pas de page propre,
+		// donc pas de résultat de recherche qui mènerait dans le vide.
 		'publicly_queryable' => false,
+		'exclude_from_search' => true,
 		'has_archive'        => false,
 		'menu_icon'          => 'dashicons-phone',
 		'menu_position'      => 26,

@@ -509,6 +509,11 @@ img { max-width: 100%; height: auto; display: block; }
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+  /* Au-dessus du voile de recherche : la barre de navigation doit rester nette
+     et cliquable quand le panneau est ouvert. Voir la note d'empilement au
+     niveau du voile. */
+  position: relative;
+  z-index: 2;
 }
 
 .gl-brand { display: flex; align-items: center; gap: 10px; }
@@ -585,17 +590,6 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--gl-ink-600);
 }
 .gl-nav-mobile ul { list-style: none; margin: 0; padding: 0; }
-.gl-nav-mobile__cta {
-  margin-top: 12px;
-  background: var(--gl-lagoon-600);
-  color: var(--gl-white);
-  padding: 13px 18px;
-  border-radius: var(--gl-radius-sm);
-  font-size: 15px;
-  font-weight: 700;
-  text-align: center;
-}
-
 /* Navigation desktop : masquée sous 1080px. */
 .gl-nav-desktop { display: none; }
 
@@ -615,9 +609,12 @@ img { max-width: 100%; height: auto; display: block; }
     padding: 0;
   }
   .gl-nav-desktop li { position: relative; }
+  /* Marges symétriques : la maquette laissait 16 px en bas pour rejoindre un
+     sous-menu qui commençait plus loin. Ici le sous-menu se colle au lien, et
+     ce déséquilibre remontait le texte par rapport au bouton de recherche. */
   .gl-nav-desktop > ul > li > a {
     display: block;
-    padding: 8px 10px 16px;
+    padding: 8px 10px;
     font-size: 13.5px;
     font-weight: 600;
     color: var(--gl-ink-600);
@@ -630,7 +627,7 @@ img { max-width: 100%; height: auto; display: block; }
 
   .gl-nav-desktop .sub-menu {
     position: absolute;
-    top: 100%;
+    top: calc(100% + 8px);
     left: 8px;
     z-index: 30;
     list-style: none;
@@ -648,6 +645,18 @@ img { max-width: 100%; height: auto; display: block; }
     transform: translateY(-6px);
     transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
   }
+  /* Passerelle invisible comblant les 8 px entre le lien et son sous-menu :
+     sans elle, la souris quitte la zone survolée en descendant et le menu se
+     referme sous le curseur. */
+  .gl-nav-desktop .sub-menu::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -8px;
+    height: 8px;
+  }
+
   /* Ouverture au survol et au clavier : sans :focus-within, le menu déroulant
      serait inatteignable en navigation clavier. */
   .gl-nav-desktop li:hover > .sub-menu,
@@ -668,21 +677,235 @@ img { max-width: 100%; height: auto; display: block; }
   }
   .gl-nav-desktop .sub-menu a:hover { background: var(--gl-lagoon-50); }
 
-  .gl-nav-desktop__cta {
-    background: var(--gl-lagoon-600);
-    color: var(--gl-white);
-    padding: 10px 18px;
-    border-radius: 999px;
-    font-size: 14px;
-    font-weight: 700;
-    white-space: nowrap;
-    transition: background 0.15s ease, transform 0.15s ease;
-  }
-  .gl-nav-desktop__cta:hover {
-    background: var(--gl-lagoon-700);
-    transform: translateY(-1px);
-  }
 }
+
+/* --- Recherche -------------------------------------------------------------
+   Champ toujours visible plutôt qu'une loupe qui déplie : sur un site de
+   services, la recherche est un geste courant, et une commande masquée derrière
+   un clic se trouve nettement moins.
+   -------------------------------------------------------------------------- */
+
+.gl-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: 999px;
+  padding: 2px 2px 2px 14px;
+}
+.gl-search:focus-within { border-color: var(--gl-lagoon-500); }
+.gl-search input[type="search"] {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--gl-ink-900);
+  padding: 8px 0;
+}
+.gl-search input[type="search"]:focus { outline: none; }
+.gl-search button {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.gl-search button:hover { background: var(--gl-lagoon-700); }
+
+/* Sur les pages de résultats et la 404, le champ respire davantage. */
+.gl-search-bar { max-width: 520px; margin-bottom: 28px; }
+.gl-search-bar .gl-search { padding: 4px 4px 4px 16px; }
+.gl-search-bar input[type="search"] { font-size: 15px; padding: 10px 0; }
+
+/* --- Panneau de recherche ---------------------------------------------------
+   Un bouton ouvre un panneau : sous le bandeau sur grand écran, en tiroir
+   latéral sur téléphone. Le panneau est déclaré comme boîte de dialogue, d'où
+   la gestion du focus et de la touche Échap dans theme.js.
+   -------------------------------------------------------------------------- */
+
+.gl-header__actions { display: flex; align-items: center; gap: 4px; }
+
+.gl-search-toggle {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border: 1px solid var(--gl-border);
+  border-radius: 50%;
+  background: var(--gl-white);
+  color: var(--gl-ink-900);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.gl-search-toggle:hover {
+  background: var(--gl-lagoon-600);
+  border-color: var(--gl-lagoon-600);
+  color: var(--gl-white);
+}
+.gl-search-toggle[aria-expanded="true"] {
+  background: var(--gl-lagoon-600);
+  border-color: var(--gl-lagoon-600);
+  color: var(--gl-white);
+}
+
+/* Replié uniquement quand le script a pris la main. */
+.js-search .gl-search-panel { display: none; }
+.js-search .gl-search-panel.is-open { display: block; }
+
+.gl-search-panel {
+  background: var(--gl-white);
+  border-top: 1px solid var(--gl-border);
+  box-shadow: 0 16px 32px rgba(20, 40, 60, 0.14);
+  position: relative;
+  z-index: 2;
+}
+.gl-search-panel__inner {
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 24px var(--gl-gutter) 28px;
+}
+.gl-search-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+.gl-search-panel__title {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gl-ink-900);
+  margin: 0;
+}
+.gl-search-panel__close {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius-sm);
+  background: var(--gl-white);
+  color: var(--gl-ink-900);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+.gl-search-panel__close:hover { background: var(--gl-lagoon-50); }
+.gl-search-panel__help {
+  font-size: 14.5px;
+  color: var(--gl-ink-600);
+  margin: 0 0 14px;
+  max-width: 640px;
+}
+.gl-search-panel .gl-search { max-width: 640px; padding: 4px 4px 4px 16px; }
+.gl-search-panel .gl-search input[type="search"] { font-size: 15px; padding: 11px 0; }
+
+.gl-search-panel__aside {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: var(--gl-lagoon-50);
+  border-radius: var(--gl-radius);
+  max-width: 640px;
+}
+.gl-search-panel__aside p { margin: 0; font-size: 14px; color: var(--gl-ink-600); }
+.gl-search-panel__aside strong { color: var(--gl-ink-900); }
+.gl-search-panel__aside a { color: var(--gl-lagoon-700); font-weight: 700; text-decoration: underline; }
+.gl-search-panel__aside-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gl-lagoon-100);
+  color: var(--gl-lagoon-700);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Voile derrière le panneau, pour isoler la recherche du reste de la page.
+   Les z-index sont volontairement petits : le voile vit dans le contexte
+   d'empilement de l'en-tête (sticky + z-index 20), donc il couvre déjà toute
+   la page. Il ne se compare qu'à ses frères — barre de navigation et panneau,
+   tous deux en z-index 2 pour rester devant lui. */
+.gl-search-overlay { display: none; }
+.js-search .gl-search-overlay.is-open {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  background: rgba(var(--gl-lagoon-900-rgb), 0.45);
+}
+
+/* Sur téléphone, le panneau devient un tiroir latéral plein écran. */
+@media (max-width: 1079px) {
+  .js-search .gl-search-panel.is-open {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(360px, 100%);
+    z-index: 2;
+    overflow-y: auto;
+    border-top: 0;
+  }
+  .gl-search-panel__inner { padding: 20px var(--gl-gutter) 28px; }
+}
+
+@media (min-width: 1080px) {
+  .gl-header__actions { display: none; }
+  .gl-nav-desktop .gl-search-toggle { margin-left: 8px; }
+}
+
+/* --- Résultats de recherche ------------------------------------------------ */
+
+.gl-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.gl-result__link {
+  display: block;
+  padding: 18px 20px;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius);
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.gl-result__link:hover {
+  border-color: var(--gl-lagoon-500);
+  transform: translateY(-2px);
+}
+.gl-result__type {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--gl-lagoon-700);
+  background: var(--gl-lagoon-50);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.gl-result__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+.gl-result__text { font-size: 14px; color: var(--gl-ink-600); margin: 0; }
 
 /* --- Hero ----------------------------------------------------------------- */
 
@@ -1928,6 +2151,100 @@ a.gl-card:hover { border-color: var(--gl-lagoon-500); }
   .gl-places { grid-template-columns: repeat(3, 1fr); gap: 24px; }
 }
 
+/* --- Questions fréquentes --------------------------------------------------
+   Accordéon en details/summary : il se déplie sans JavaScript, les lecteurs
+   d'écran l'annoncent correctement, et la recherche du navigateur trouve le
+   texte replié.
+   -------------------------------------------------------------------------- */
+
+.gl-faq { max-width: 760px; }
+/* Sur la page Contact, la FAQ précède le formulaire : sans respiration, les
+   deux blocs se lisent comme un seul. */
+.gl-faq + .gl-contact { margin-top: 48px; }
+.gl-faq__item {
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius);
+  background: var(--gl-white);
+  margin-bottom: 10px;
+}
+.gl-faq__item[open] { border-color: var(--gl-lagoon-500); }
+.gl-faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  cursor: pointer;
+  list-style: none;
+}
+/* Retire le triangle natif pour poser le nôtre, identique d'un navigateur à l'autre. */
+.gl-faq__question::-webkit-details-marker { display: none; }
+.gl-faq__question::after {
+  content: '+';
+  flex-shrink: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gl-lagoon-600);
+  line-height: 1;
+}
+.gl-faq__item[open] .gl-faq__question::after { content: '−'; }
+.gl-faq__question:hover { color: var(--gl-lagoon-700); }
+.gl-faq__answer {
+  padding: 0 20px 18px;
+  font-size: 15px;
+}
+.gl-faq__answer > *:first-child { margin-top: 0; }
+
+/* --- Pharmacie de garde ----------------------------------------------------- */
+
+.gl-garde {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 22px;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-lagoon-500);
+  border-radius: var(--gl-radius-lg);
+}
+.gl-garde__icon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gl-green-100);
+  color: var(--gl-green-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gl-garde__body { flex: 1; min-width: 180px; }
+.gl-garde__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gl-green-600);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 2px;
+}
+.gl-garde__nom {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--gl-ink-900);
+  margin: 0 0 4px;
+}
+.gl-garde__meta { font-size: 14px; color: var(--gl-ink-600); margin: 0; }
+.gl-garde__tel { flex-shrink: 0; }
+.gl-garde__suite {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 28px 0 12px;
+}
+
 /* --- Pagination ----------------------------------------------------------- */
 
 .gl-pagination { margin-top: 36px; }
@@ -2061,7 +2378,6 @@ a.gl-card:hover { border-color: var(--gl-lagoon-500); }
     scroll-behavior: auto !important;
   }
   .gl-btn:hover,
-  .gl-nav-desktop__cta:hover,
   .gl-quick-card:hover,
   .gl-news-card:hover,
   .gl-agenda__row:hover,

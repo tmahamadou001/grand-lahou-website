@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$gl_demarches_url = get_post_type_archive_link( 'gl_demarche' ) ?: home_url( '/demarches/' );
 ?>
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -79,13 +78,22 @@ if ( $gl_flash_active && '' !== $gl_flash_message ) :
 			</a>
 		<?php endif; ?>
 
-		<button type="button" class="gl-burger" data-gl-burger
-			aria-expanded="false" aria-controls="gl-mobile-nav"
-			aria-label="<?php esc_attr_e( 'Ouvrir le menu', 'grand-lahou' ); ?>">
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-			<span aria-hidden="true"></span>
-		</button>
+		<div class="gl-header__actions">
+			<?php // Deux boutons — un par disposition — pilotant le même panneau. ?>
+			<button type="button" class="gl-search-toggle" data-gl-search-toggle
+				aria-expanded="false" aria-controls="gl-search-panel"
+				aria-label="<?php esc_attr_e( 'Rechercher', 'grand-lahou' ); ?>">
+				<?php echo gl_icon( 'search', 20 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG interne. ?>
+			</button>
+
+			<button type="button" class="gl-burger" data-gl-burger
+				aria-expanded="false" aria-controls="gl-mobile-nav"
+				aria-label="<?php esc_attr_e( 'Ouvrir le menu', 'grand-lahou' ); ?>">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</button>
+		</div>
 
 		<nav class="gl-nav-desktop" aria-label="<?php esc_attr_e( 'Navigation principale', 'grand-lahou' ); ?>">
 			<?php
@@ -97,9 +105,11 @@ if ( $gl_flash_active && '' !== $gl_flash_message ) :
 				'items_wrap'     => '<ul>%3$s</ul>',
 			) );
 			?>
-			<a class="gl-nav-desktop__cta" href="<?php echo esc_url( $gl_demarches_url ); ?>">
-				<?php esc_html_e( 'Démarches en ligne', 'grand-lahou' ); ?>
-			</a>
+			<button type="button" class="gl-search-toggle" data-gl-search-toggle
+				aria-expanded="false" aria-controls="gl-search-panel"
+				aria-label="<?php esc_attr_e( 'Rechercher', 'grand-lahou' ); ?>">
+				<?php echo gl_icon( 'search', 20 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG interne. ?>
+			</button>
 		</nav>
 	</div>
 
@@ -114,10 +124,54 @@ if ( $gl_flash_active && '' !== $gl_flash_message ) :
 			'items_wrap'     => '<ul>%3$s</ul>',
 		) );
 		?>
-		<a class="gl-nav-mobile__cta" href="<?php echo esc_url( $gl_demarches_url ); ?>">
-			<?php esc_html_e( 'Démarches en ligne', 'grand-lahou' ); ?>
-		</a>
 	</nav>
+
+	<?php
+	/*
+	 * Panneau de recherche. Il est visible par défaut : c'est le script qui le
+	 * replie au chargement, en posant « js-search » sur la page. Sans
+	 * JavaScript, le formulaire reste donc accessible en bas de l'en-tête au
+	 * lieu de disparaître derrière un bouton inopérant.
+	 */
+	$gl_contact_page = get_page_by_path( 'contact' );
+	?>
+	<div class="gl-search-overlay" data-gl-search-overlay hidden></div>
+
+	<div class="gl-search-panel" id="gl-search-panel" data-gl-search-panel
+		role="dialog" aria-modal="true"
+		aria-labelledby="gl-search-panel-title">
+
+		<div class="gl-search-panel__inner">
+			<div class="gl-search-panel__head">
+				<h2 class="gl-search-panel__title" id="gl-search-panel-title">
+					<?php esc_html_e( 'Recherche', 'grand-lahou' ); ?>
+				</h2>
+				<button type="button" class="gl-search-panel__close" data-gl-search-close
+					aria-label="<?php esc_attr_e( 'Fermer la recherche', 'grand-lahou' ); ?>">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+
+			<p class="gl-search-panel__help">
+				<?php esc_html_e( 'Saisissez un mot-clé (exemple : acte de naissance) ou posez votre question.', 'grand-lahou' ); ?>
+			</p>
+
+			<?php get_search_form(); ?>
+
+			<?php if ( $gl_contact_page ) : ?>
+				<div class="gl-search-panel__aside">
+					<span class="gl-search-panel__aside-icon" aria-hidden="true">?</span>
+					<p>
+						<strong><?php esc_html_e( 'Vous ne trouvez pas ?', 'grand-lahou' ); ?></strong><br>
+						<?php esc_html_e( 'Consultez les questions fréquentes ou écrivez à la mairie :', 'grand-lahou' ); ?>
+						<a href="<?php echo esc_url( get_permalink( $gl_contact_page ) ); ?>">
+							<?php esc_html_e( 'nous contacter', 'grand-lahou' ); ?>
+						</a>
+					</p>
+				</div>
+			<?php endif; ?>
+		</div>
+	</div>
 </header>
 
 <main id="gl-content">

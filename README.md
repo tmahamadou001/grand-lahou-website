@@ -32,7 +32,9 @@ tools/seed.php                Contenu de démonstration
 tools/assets/                 Logo de la ville (WebP servi, PNG d'origine)
 wp-content/
   mu-plugins/grand-lahou-core/  Socle métier — toujours actif
-    post-types.php              Agenda, démarches, services, élus, lieux, numéros
+    post-types.php              Agenda, démarches, services, élus, lieux, numéros,
+                                FAQ, pharmacies de garde, diapositives
+    seo.php                     Description, Open Graph, données structurées
     term-image.php              Vignette des catégories de lieux
     contact-form.php            Traitement du formulaire de contact
     meta-boxes.php              Champs de chaque type de contenu
@@ -190,6 +192,61 @@ d'accessibilité et de lisibilité du cahier des charges :
 La photo de l'événement disparaît également sous 520 px de large : avec la
 pastille de date, il ne restait pas assez de place pour le titre sur un petit
 téléphone.
+
+## Référencement et partage
+
+`mu-plugins/grand-lahou-core/seo.php` produit la description de page, les
+balises Open Graph et une fiche JSON-LD `GovernmentOrganization` sur l'accueil.
+L'image de partage suit une cascade — image du contenu, puis première
+diapositive du bandeau, puis logo — car un partage sans visuel passe inaperçu
+dans un fil Facebook.
+
+Ce fichier se neutralise seul si Yoast, Rank Math, All in One SEO ou SEOPress
+est installé : deux jeux de balises concurrents valent moins qu'aucun.
+
+Les types de contenu sans page propre (diapositives, numéros utiles, FAQ,
+pharmacies) sont exclus de la recherche interne, sinon ils remonteraient vers
+des adresses inexistantes.
+
+## Rendre le site visible sur Google
+
+À faire une fois le site en ligne sur son domaine définitif, dans cet ordre.
+
+**1. Avant d'ouvrir au public — ne pas laisser indexer le contenu de
+démonstration.** Dans Réglages → Lecture, laisser coché « Demander aux moteurs
+de recherche de ne pas indexer ce site » tant que les vrais contenus ne sont
+pas en place. Google mettrait des semaines à oublier des pages « Nom Prénom »
+ou « Description à compléter ». Décocher le jour du lancement.
+
+**2. Google Search Console** — <https://search.google.com/search-console>
+
+- Ajouter une propriété de type « Préfixe d'URL » avec `https://mairie-grandlahou.ci`
+- Valider la propriété : le plus simple est le fichier HTML à déposer à la
+  racine, ou l'enregistrement DNS TXT chez le registraire du domaine `.ci`
+- Dans « Sitemaps », soumettre `wp-sitemap.xml` (WordPress le génère seul)
+- Dans « Inspection d'URL », demander l'indexation de la page d'accueil
+
+C'est ce qui fait passer l'indexation de plusieurs semaines à quelques jours.
+La console signale ensuite les pages en erreur et les mots-clés qui amènent du
+trafic.
+
+**3. Fiche Google Business Profile** — <https://business.google.com>
+
+C'est le levier le plus rentable pour une mairie, et il est gratuit : c'est
+lui qui affiche l'encadré à droite des résultats avec l'adresse, les horaires,
+le téléphone et l'itinéraire.
+
+- Catégorie : « Mairie » (ou « Administration locale »)
+- Renseigner **exactement** les mêmes coordonnées que sur le site : le moindre
+  écart d'écriture entre la fiche, le site et l'annuaire affaiblit le signal
+  que Google associe à la commune
+- Horaires d'ouverture, photos de l'hôtel de ville, lien vers le site
+- La validation se fait par courrier postal ou par téléphone, compter quelques
+  jours
+
+**4. Entretien** — publier régulièrement des actualités : Google favorise les
+sites vivants, et chaque fiche démarche bien remplie est une porte d'entrée sur
+une recherche du type « acte de naissance Grand-Lahou ».
 
 ## Mise en production
 

@@ -18,4 +18,5 @@ require_once __DIR__ . '/grand-lahou-core/term-image.php';
 require_once __DIR__ . '/grand-lahou-core/settings.php';
 require_once __DIR__ . '/grand-lahou-core/contact-form.php';
 require_once __DIR__ . '/grand-lahou-core/newsletter.php';
+require_once __DIR__ . '/grand-lahou-core/seo.php';
 require_once __DIR__ . '/grand-lahou-core/editor-role.php';

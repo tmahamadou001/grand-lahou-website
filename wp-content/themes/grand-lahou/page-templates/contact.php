@@ -56,6 +56,15 @@ while ( have_posts() ) :
 					</p>
 				<?php endif; ?>
 
+				<?php
+				// La FAQ avant le formulaire : une réponse trouvée ici, c'est un
+				// message de moins à traiter pour l'agent municipal.
+				gl_render_faq(
+					gl_faq_items( 'contact' ),
+					__( 'Avant de nous écrire', 'grand-lahou' )
+				);
+				?>
+
 				<div class="gl-contact gl-reveal">
 					<div class="gl-contact__infos">
 						<?php foreach ( $gl_infos as list( $gl_label, $gl_valeur, $gl_type ) ) : ?>

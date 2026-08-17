@@ -63,6 +63,11 @@ function gl_reveal_bootstrap(): void {
 	<script>
 	(function () {
 		var root = document.documentElement;
+
+		// Replie le panneau de recherche : sans JavaScript il reste déployé,
+		// donc utilisable, plutôt que caché derrière un bouton inerte.
+		root.classList.add('js-search');
+
 		var reduit = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (reduit || !('IntersectionObserver' in window)) { return; }
 		root.classList.add('js-reveal');

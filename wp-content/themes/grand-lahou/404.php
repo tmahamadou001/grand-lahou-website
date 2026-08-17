@@ -24,13 +24,15 @@ get_header();
 <section class="gl-section">
 	<div class="gl-container">
 		<p class="gl-section__lead">
-			<?php esc_html_e( 'Vous pouvez revenir à l\'accueil ou consulter les démarches les plus demandées.', 'grand-lahou' ); ?>
+			<?php esc_html_e( 'Cherchez ce que vous vouliez consulter :', 'grand-lahou' ); ?>
 		</p>
-		<p>
-			<a class="gl-btn gl-btn--primary" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<?php esc_html_e( 'Retour à l\'accueil', 'grand-lahou' ); ?>
-			</a>
+
+		<div class="gl-search-bar"><?php get_search_form(); ?></div>
+
+		<p class="gl-section__lead">
+			<?php esc_html_e( 'Ou rejoignez directement une rubrique :', 'grand-lahou' ); ?>
 		</p>
+		<?php gl_liens_de_secours(); ?>
 	</div>
 </section>
 

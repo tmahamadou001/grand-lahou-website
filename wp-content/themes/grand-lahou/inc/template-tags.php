@@ -30,6 +30,8 @@ function gl_icon( string $name, int $size = 24 ): string {
 		'pin'      => '<path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11Z"/><circle cx="12" cy="10" r="2.8"/>',
 		'clock'    => '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/>',
 		'camera'    => '<path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.5"/>',
+		'search'    => '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
+		'pill'      => '<path d="M10.5 3.5a5 5 0 0 1 7 7l-7 7a5 5 0 0 1-7-7Z"/><path d="m7 7 7 7"/>',
 		'hourglass' => '<path d="M7 3h10"/><path d="M7 21h10"/><path d="M8 3v3.5c0 2 4 3.2 4 5.5s-4 3.5-4 5.5V21"/><path d="M16 3v3.5c0 2-4 3.2-4 5.5s4 3.5 4 5.5V21"/>',
 		'coin'      => '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5A2.8 2.8 0 0 0 12 8c-1.7 0-2.6 1-2.6 2s.9 1.8 2.6 2 2.6.9 2.6 2-.9 2-2.6 2a2.8 2.8 0 0 1-2.5-1.5"/><path d="M12 6.5v11"/>',
 		'mail'     => '<path d="M3 6.5 12 13l9-6.5"/><rect x="3" y="5" width="18" height="14" rx="2"/>',
@@ -212,16 +214,40 @@ function gl_upcoming_events( int $count = 3 ): array {
 }
 
 /**
+ * Mémorise la couleur de la dernière section d'une page.
+ *
+ * La vague qui précède le pied de page est peinte sur le fond de ce qui la
+ * précède. Or ce fond varie : blanc, bleu pâle ou bleu nuit selon le gabarit,
+ * et parfois selon le contenu — une archive de démarches ne se termine par la
+ * FAQ que si des questions existent. Sans cette indication, une bande blanche
+ * apparaît entre la dernière section et la vague.
+ *
+ * @param string|null $fond « white », « alt » ou « deep ». Null pour lire.
+ * @return string
+ */
+function gl_fond_derniere_section( ?string $fond = null ): string {
+	static $valeur = 'white';
+
+	if ( null !== $fond ) {
+		$valeur = $fond;
+	}
+
+	return $valeur;
+}
+
+/**
  * Affiche un séparateur en vague entre deux sections.
  *
  * Chaque vague est peinte de la couleur de la section qui suit, posée sur le
  * fond de la section qui précède : la découpe paraît organique.
  *
- * @param string $variante Nom du séparateur, tel que défini dans la maquette.
+ * @param string $variante    Nom du séparateur, tel que défini dans la maquette.
  * @param string $remplissage Classe de remplissage forçant la couleur, quand la
  *                            section suivante dépend d'un réglage.
+ * @param string $fond        Classe de fond forçant la couleur de la section
+ *                            précédente, quand elle dépend du contenu.
  */
-function gl_wave( string $variante, string $remplissage = '' ): void {
+function gl_wave( string $variante, string $remplissage = '', string $fond = '' ): void {
 	$vagues = array(
 		'apres-hero'     => array(
 			'classes' => 'gl-wave--after-hero gl-wave--fill-white',
@@ -258,6 +284,9 @@ function gl_wave( string $variante, string $remplissage = '' ): void {
 	$classes = $vagues[ $variante ]['classes'];
 	if ( '' !== $remplissage ) {
 		$classes = preg_replace( '/gl-wave--fill-\S+/', $remplissage, $classes );
+	}
+	if ( '' !== $fond ) {
+		$classes = preg_replace( '/gl-wave--on-\S+/', $fond, $classes );
 	}
 
 	printf(
@@ -399,6 +428,157 @@ function gl_breadcrumb( string $section = '' ): void {
 		esc_html( $current )
 	);
 	echo '</nav>';
+}
+
+/**
+ * Récupère les questions fréquentes à afficher sur une page donnée.
+ *
+ * @param string $emplacement « demarches » ou « contact ».
+ * @return WP_Post[]
+ */
+function gl_faq_items( string $emplacement ): array {
+	return get_posts( array(
+		'post_type'      => 'gl_faq',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'orderby'        => array( 'menu_order' => 'ASC', 'title' => 'ASC' ),
+		'meta_query'     => array(
+			'relation' => 'OR',
+			array(
+				'key'     => 'gl_faq_emplacement',
+				'value'   => array( $emplacement, 'partout' ),
+				'compare' => 'IN',
+			),
+			// Une question enregistrée avant l'ajout du champ n'a pas de valeur :
+			// on la considère visible partout plutôt que de la faire disparaître.
+			array(
+				'key'     => 'gl_faq_emplacement',
+				'compare' => 'NOT EXISTS',
+			),
+		),
+	) );
+}
+
+/**
+ * Affiche une liste de questions en accordéon.
+ *
+ * S'appuie sur les balises natives details/summary : elles se déplient sans
+ * JavaScript, sont annoncées correctement par les lecteurs d'écran, et le
+ * navigateur gère seul la recherche dans la page.
+ *
+ * @param WP_Post[] $questions Questions à afficher.
+ * @param string    $titre     Titre de la section.
+ */
+function gl_render_faq( array $questions, string $titre = '' ): void {
+	if ( ! $questions ) {
+		return;
+	}
+
+	echo '<div class="gl-faq gl-reveal">';
+
+	if ( '' !== $titre ) {
+		printf( '<h2 class="gl-subtitle">%s</h2>', esc_html( $titre ) );
+	}
+
+	foreach ( $questions as $question ) {
+		printf(
+			'<details class="gl-faq__item"><summary class="gl-faq__question">%s</summary><div class="gl-faq__answer gl-prose">%s</div></details>',
+			esc_html( get_the_title( $question ) ),
+			wp_kses_post( apply_filters( 'the_content', $question->post_content ) )
+		);
+	}
+
+	echo '</div>';
+}
+
+/**
+ * Retourne la pharmacie de garde aujourd'hui.
+ *
+ * @return WP_Post|null
+ */
+function gl_pharmacie_de_garde(): ?WP_Post {
+	$aujourdhui = current_time( 'Y-m-d' );
+
+	$trouvees = get_posts( array(
+		'post_type'      => 'gl_pharmacie',
+		'posts_per_page' => 1,
+		'post_status'    => 'publish',
+		'meta_key'       => 'gl_pharmacie_debut',
+		'orderby'        => 'meta_value',
+		'order'          => 'DESC',
+		'meta_query'     => array(
+			array(
+				'key'     => 'gl_pharmacie_debut',
+				'value'   => $aujourdhui,
+				'compare' => '<=',
+				'type'    => 'DATE',
+			),
+			array(
+				'key'     => 'gl_pharmacie_fin',
+				'value'   => $aujourdhui,
+				'compare' => '>=',
+				'type'    => 'DATE',
+			),
+		),
+	) );
+
+	return $trouvees ? $trouvees[0] : null;
+}
+
+/**
+ * Retourne les gardes à venir, après celle en cours.
+ *
+ * @param int $nombre Nombre de gardes souhaité.
+ * @return WP_Post[]
+ */
+function gl_pharmacies_a_venir( int $nombre = 3 ): array {
+	return get_posts( array(
+		'post_type'      => 'gl_pharmacie',
+		'posts_per_page' => $nombre,
+		'post_status'    => 'publish',
+		'meta_key'       => 'gl_pharmacie_debut',
+		'orderby'        => 'meta_value',
+		'order'          => 'ASC',
+		'meta_query'     => array(
+			array(
+				'key'     => 'gl_pharmacie_debut',
+				'value'   => current_time( 'Y-m-d' ),
+				'compare' => '>',
+				'type'    => 'DATE',
+			),
+		),
+	) );
+}
+
+/**
+ * Affiche des raccourcis vers les rubriques les plus consultées.
+ *
+ * Sert quand une page manque à l'appel : recherche sans résultat, adresse
+ * inconnue. Une impasse sans porte de sortie fait quitter le site.
+ */
+function gl_liens_de_secours(): void {
+	$liens = array_filter( array(
+		array( __( 'Démarches', 'grand-lahou' ), get_post_type_archive_link( 'gl_demarche' ) ),
+		array( __( 'Annuaire des services', 'grand-lahou' ), get_post_type_archive_link( 'gl_service' ) ),
+		array( __( 'Actualités', 'grand-lahou' ), get_permalink( (int) get_option( 'page_for_posts' ) ) ),
+		array( __( 'Agenda', 'grand-lahou' ), get_post_type_archive_link( 'gl_evenement' ) ),
+		array( __( 'Contact', 'grand-lahou' ), home_url( '/contact/' ) ),
+	), static fn( $l ) => ! empty( $l[1] ) );
+
+	if ( ! $liens ) {
+		return;
+	}
+
+	echo '<div class="gl-welcome__links">';
+	foreach ( $liens as $index => $lien ) {
+		printf(
+			'<a class="gl-pill%s" href="%s">%s</a>',
+			0 === $index ? ' gl-pill--primary' : '',
+			esc_url( $lien[1] ),
+			esc_html( $lien[0] )
+		);
+	}
+	echo '</div>';
 }
 
 /**

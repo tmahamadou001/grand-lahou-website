@@ -143,6 +143,45 @@ administrés.
 
 ---
 
+## Les questions fréquentes
+
+Chaque question s'affiche en accordéon : le visiteur clique dessus pour lire la
+réponse.
+
+1. Menu de gauche : **FAQ → Ajouter une question**.
+2. Le **titre** est la question, telle qu'on vous la pose au guichet.
+3. La **réponse** est le contenu de la page.
+4. Sous l'éditeur, **Affichage de la question** : choisissez si elle apparaît
+   sur la page Démarches, sur la page Contact, ou sur les deux.
+5. Dans **Attributs de page**, le champ **Ordre** classe les questions.
+
+**À retenir :** une question qui revient souvent par téléphone ou par mail a
+tout intérêt à figurer sur la page **Contact**. Elle s'affiche alors juste
+au-dessus du formulaire, et c'est autant de messages en moins à traiter.
+
+---
+
+## La pharmacie de garde
+
+Le site met en avant la pharmacie en service, et affiche les gardes suivantes.
+
+1. Menu de gauche : **Pharmacies → Ajouter une pharmacie**.
+2. Le **titre** est le nom de la pharmacie.
+3. Sous l'éditeur, renseignez le **début** et la **fin** de la garde, l'adresse
+   et le téléphone.
+4. **Publier**.
+
+La pharmacie s'affiche automatiquement en haut de la page Services pendant sa
+période, puis laisse la place à la suivante. Vous n'avez rien à faire au
+changement de semaine.
+
+**Conseil :** saisissez le planning sur un ou deux mois d'avance. Les visiteurs
+voient les prochaines gardes, et vous n'avez pas à y penser chaque lundi. Si
+aucune garde ne couvre le jour en cours, le site invite à appeler la mairie —
+mieux vaut donc ne pas laisser de trou dans le calendrier.
+
+---
+
 ## Publier une alerte « Info flash »
 
 Le bandeau orange en haut de toutes les pages sert aux annonces urgentes :

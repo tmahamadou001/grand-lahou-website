@@ -287,6 +287,60 @@ if ( $logo_id ) {
 	WP_CLI::log( '  logo en place (fichier ' . $logo_id . ').' );
 }
 
+/**
+ * Importe un fichier de tools/assets/ s'il n'est pas déjà dans la médiathèque.
+ *
+ * @param string $fichier Nom du fichier.
+ * @param string $titre   Titre unique servant aussi de test anti-doublon.
+ * @return int Identifiant du fichier, 0 en cas d'échec.
+ */
+function gl_seed_media( string $fichier, string $titre ): int {
+	$existants = get_posts( array(
+		'post_type'      => 'attachment',
+		'title'          => $titre,
+		'post_status'    => 'inherit',
+		'posts_per_page' => 1,
+		'fields'         => 'ids',
+	) );
+	if ( $existants ) {
+		return (int) $existants[0];
+	}
+
+	$source = '/tools/assets/' . $fichier;
+	if ( ! file_exists( $source ) ) {
+		WP_CLI::warning( 'Fichier introuvable : ' . $source );
+		return 0;
+	}
+
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+
+	$temporaire = wp_tempnam( $source );
+	copy( $source, $temporaire );
+
+	$importe = media_handle_sideload(
+		array( 'name' => $fichier, 'tmp_name' => $temporaire ),
+		0,
+		$titre
+	);
+
+	if ( is_wp_error( $importe ) ) {
+		WP_CLI::warning( 'Import de ' . $fichier . ' : ' . $importe->get_error_message() );
+		@unlink( $temporaire );
+		return 0;
+	}
+
+	return (int) $importe;
+}
+
+// Icône affichée dans l'onglet du navigateur : le blason découpé en carré.
+$icone_id = gl_seed_media( 'icone-site.png', 'Blason de Grand-Lahou' );
+if ( $icone_id ) {
+	update_option( 'site_icon', $icone_id );
+	WP_CLI::log( '  icône de site en place.' );
+}
+
 WP_CLI::log( 'Bandeau d\'accueil…' );
 
 $diapositives = array(
@@ -521,6 +575,76 @@ foreach ( $lieux as list( $slug, $title, $categorie, $ordre ) ) {
 	if ( $lieu_id ) {
 		wp_set_object_terms( $lieu_id, $categorie, 'gl_categorie_lieu' );
 	}
+}
+
+WP_CLI::log( 'Questions fréquentes…' );
+
+$questions = array(
+	array(
+		'faq-delai-acte',
+		'Combien de temps faut-il pour obtenir un acte de naissance ?',
+		"Comptez 48 heures ouvrées après le dépôt du dossier complet au service de l'état civil. Les demandes déposées le vendredi après-midi sont traitées le lundi suivant.",
+		'partout', 0,
+	),
+	array(
+		'faq-procuration',
+		'Puis-je faire retirer un acte par une autre personne ?',
+		"Oui, à condition que la personne présente sa propre pièce d'identité, une copie de la vôtre, et une procuration écrite et signée de votre main.",
+		'partout', 1,
+	),
+	array(
+		'faq-diaspora',
+		"Je vis à l'étranger, comment obtenir un document d'état civil ?",
+		"Adressez-vous d'abord à l'ambassade ou au consulat de Côte d'Ivoire de votre pays de résidence. Pour les actes délivrés par Grand-Lahou, vous pouvez aussi mandater un proche par procuration écrite.",
+		'partout', 2,
+	),
+	array(
+		'faq-horaires-guichet',
+		'Quels sont les horaires du guichet de l\'état civil ?',
+		"Du lundi au vendredi, de 8h à 16h sans interruption. Le samedi matin de 8h à 12h uniquement pour les retraits de documents déjà prêts.",
+		'demarches', 3,
+	),
+	array(
+		'faq-delai-reponse',
+		'Sous quel délai la mairie répond-elle à un message ?',
+		"Les messages reçus par le formulaire de contact sont traités sous 3 jours ouvrés. Pour une urgence, privilégiez le téléphone.",
+		'contact', 4,
+	),
+);
+
+foreach ( $questions as list( $slug, $titre, $reponse, $emplacement, $ordre ) ) {
+	gl_seed_post( 'gl_faq', $slug, array(
+		'post_title'   => $titre,
+		'post_content' => $reponse,
+		'menu_order'   => $ordre,
+	), array(
+		'gl_faq_emplacement' => $emplacement,
+	) );
+}
+
+WP_CLI::log( 'Pharmacies de garde…' );
+
+// Les périodes sont calculées à partir d'aujourd'hui : la garde en cours reste
+// toujours en cours, quelle que soit la date d'exécution du script.
+$lundi = strtotime( 'monday this week', current_time( 'timestamp' ) );
+
+$pharmacies = array(
+	array( 'pharmacie-de-la-lagune', 'Pharmacie de la Lagune', 'Boulevard de la Lagune, face au marché central', '+225 27 22 00 02 10', 0 ),
+	array( 'pharmacie-du-phare', 'Pharmacie du Phare', 'Quartier Lopez, près de l\'école primaire', '+225 27 22 00 02 11', 7 ),
+	array( 'pharmacie-bandama', 'Pharmacie Bandama', 'Route de Lahou-Kpanda', '+225 27 22 00 02 12', 14 ),
+	array( 'pharmacie-centrale', 'Pharmacie Centrale', 'Place de l\'Hôtel de ville', '+225 27 22 00 02 13', 21 ),
+);
+
+foreach ( $pharmacies as list( $slug, $nom, $adresse, $tel, $decalage ) ) {
+	$debut = strtotime( "+{$decalage} days", $lundi );
+	gl_seed_post( 'gl_pharmacie', $slug, array(
+		'post_title' => $nom,
+	), array(
+		'gl_pharmacie_debut'   => gmdate( 'Y-m-d', $debut ),
+		'gl_pharmacie_fin'     => gmdate( 'Y-m-d', strtotime( '+6 days', $debut ) ),
+		'gl_pharmacie_adresse' => $adresse,
+		'gl_pharmacie_tel'     => $tel,
+	) );
 }
 
 WP_CLI::log( 'Numéros utiles…' );

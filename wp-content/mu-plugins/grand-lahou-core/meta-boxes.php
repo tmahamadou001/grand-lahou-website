@@ -197,6 +197,44 @@ function gl_field_definitions(): array {
 				),
 			),
 		),
+		'gl_faq'       => array(
+			'title'  => __( 'Affichage de la question', 'grand-lahou' ),
+			'fields' => array(
+				'gl_faq_emplacement' => array(
+					'label'   => __( 'Où afficher cette question', 'grand-lahou' ),
+					'type'    => 'select',
+					'options' => array(
+						'partout'   => __( 'Démarches et Contact', 'grand-lahou' ),
+						'demarches' => __( 'Page Démarches uniquement', 'grand-lahou' ),
+						'contact'   => __( 'Page Contact uniquement', 'grand-lahou' ),
+					),
+					'help'    => __( 'Une question posée souvent au guichet gagne à figurer sur la page Contact : elle évite un message de plus à traiter.', 'grand-lahou' ),
+				),
+			),
+		),
+		'gl_pharmacie' => array(
+			'title'  => __( 'Garde et coordonnées', 'grand-lahou' ),
+			'fields' => array(
+				'gl_pharmacie_debut'   => array(
+					'label' => __( 'Début de la garde', 'grand-lahou' ),
+					'type'  => 'date',
+					'help'  => __( 'La pharmacie est mise en avant sur le site entre ces deux dates, incluses.', 'grand-lahou' ),
+				),
+				'gl_pharmacie_fin'     => array(
+					'label' => __( 'Fin de la garde', 'grand-lahou' ),
+					'type'  => 'date',
+				),
+				'gl_pharmacie_adresse' => array(
+					'label'       => __( 'Adresse', 'grand-lahou' ),
+					'type'        => 'text',
+					'placeholder' => __( 'Ex. Boulevard de la Lagune, face au marché', 'grand-lahou' ),
+				),
+				'gl_pharmacie_tel'     => array(
+					'label' => __( 'Téléphone', 'grand-lahou' ),
+					'type'  => 'tel',
+				),
+			),
+		),
 		'gl_numero_utile' => array(
 			'title'  => __( 'Numéro', 'grand-lahou' ),
 			'fields' => array(

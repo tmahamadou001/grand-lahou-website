@@ -30,6 +30,81 @@
     });
   }
 
+  /* --- Panneau de recherche --------------------------------------------- */
+
+  var panneau = document.querySelector('[data-gl-search-panel]');
+  var voile = document.querySelector('[data-gl-search-overlay]');
+  var boutons = document.querySelectorAll('[data-gl-search-toggle]');
+
+  if (panneau && boutons.length) {
+    var dernierBouton = null;
+
+    function elementsFocusables() {
+      return panneau.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+    }
+
+    function ouvrirRecherche(declencheur) {
+      dernierBouton = declencheur || boutons[0];
+      panneau.classList.add('is-open');
+      if (voile) { voile.classList.add('is-open'); voile.hidden = false; }
+      Array.prototype.forEach.call(boutons, function (b) {
+        b.setAttribute('aria-expanded', 'true');
+      });
+
+      var champ = panneau.querySelector('input[type="search"]');
+      if (champ) { champ.focus(); champ.select(); }
+    }
+
+    function fermerRecherche() {
+      panneau.classList.remove('is-open');
+      if (voile) { voile.classList.remove('is-open'); voile.hidden = true; }
+      Array.prototype.forEach.call(boutons, function (b) {
+        b.setAttribute('aria-expanded', 'false');
+      });
+      // Le focus revient d'où il venait, sinon il repart en haut de page.
+      if (dernierBouton) { dernierBouton.focus(); }
+    }
+
+    Array.prototype.forEach.call(boutons, function (bouton) {
+      bouton.addEventListener('click', function () {
+        if (panneau.classList.contains('is-open')) { fermerRecherche(); }
+        else { ouvrirRecherche(bouton); }
+      });
+    });
+
+    var fermeture = panneau.querySelector('[data-gl-search-close]');
+    if (fermeture) { fermeture.addEventListener('click', fermerRecherche); }
+    if (voile) { voile.addEventListener('click', fermerRecherche); }
+
+    document.addEventListener('keydown', function (event) {
+      if (!panneau.classList.contains('is-open')) { return; }
+
+      if (event.key === 'Escape') {
+        fermerRecherche();
+        return;
+      }
+
+      // Le panneau se déclare comme boîte de dialogue : la tabulation doit y
+      // rester tant qu'il est ouvert.
+      if (event.key === 'Tab') {
+        var focusables = elementsFocusables();
+        if (!focusables.length) { return; }
+        var premier = focusables[0];
+        var dernier = focusables[focusables.length - 1];
+
+        if (event.shiftKey && document.activeElement === premier) {
+          event.preventDefault();
+          dernier.focus();
+        } else if (!event.shiftKey && document.activeElement === dernier) {
+          event.preventDefault();
+          premier.focus();
+        }
+      }
+    });
+  }
+
   /* --- Carrousel du bandeau d'accueil ----------------------------------- */
 
   var carrousel = document.querySelector('[data-gl-carousel]');
