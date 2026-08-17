@@ -1,0 +1,15 @@
+/*
+Theme Name: Grand-Lahou
+Theme URI: https://mairie-grandlahou.ci
+Author: Mairie de Grand-Lahou
+Description: Thème officiel de la Mairie de Grand-Lahou. Mobile-first, optimisé pour les connexions lentes.
+Version: 1.0.0
+Requires at least: 6.4
+Requires PHP: 8.1
+License: GPL-2.0-or-later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: grand-lahou
+Tags: mairie, institutionnel, mobile-first
+*/
+
+/* Les styles sont dans assets/css/theme.css (chargé depuis functions.php). */

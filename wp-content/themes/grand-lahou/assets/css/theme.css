@@ -1,0 +1,2084 @@
+/*
+ * Polices auto-hébergées, sous-ensemble latin.
+ *
+ * Mulish pour le texte, Abril Fatface pour les grands titres : c'est le couple
+ * du site de la Ville de Grand-Bassam, retenu comme référence. Les deux sont
+ * sous licence SIL Open Font — voir OFL.txt et OFL-mulish.txt.
+ *
+ * Elles sont servies depuis le domaine du site plutôt que depuis le CDN Google :
+ * cela supprime une résolution DNS et une négociation TLS vers un tiers, ce qui
+ * compte sur les connexions 3G visées par le cahier des charges. Le sous-ensemble
+ * latin couvre tous les caractères accentués du français.
+ *
+ * Abril Fatface n'existe qu'en graisse 400 : toute règle qui l'utilise doit
+ * fixer font-weight à 400, sinon le navigateur fabrique un faux gras.
+ */
+
+@font-face {
+  font-family: 'Abril Fatface';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/abril-fatface-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/mulish-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/mulish-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../fonts/mulish-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../fonts/mulish-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Mulish';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('../fonts/mulish-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ==========================================================================
+   Mairie de Grand-Lahou — feuille de styles principale
+   Mobile-first : les styles de base visent le téléphone, les media queries
+   ajoutent le desktop à partir de 1080px (bascule de la navigation).
+   ========================================================================== */
+
+:root {
+  --gl-lagoon-900: #123c4a;
+  --gl-lagoon-700: #175a70;
+  --gl-lagoon-600: #1e6f88;
+  --gl-lagoon-500: #3f92a8;
+  --gl-lagoon-100: #c0e8ea;
+  --gl-lagoon-50:  #eaf6f7;
+  /* Même bleu nuit que --gl-lagoon-900, en composantes, pour les dégradés. */
+  --gl-lagoon-900-rgb: 18, 60, 74;
+
+  --gl-green-600: #2f7134;
+  --gl-green-700: #215226;
+  --gl-green-100: #e1efe2;
+
+  /* Le soleil du blason, relevé sur le logo de la ville. Décoratif seulement :
+     en texte il ne dépasse pas 1,5:1 sur blanc. --gl-sand-50 est ce même
+     soleil très dilué, et sert de fond aux surfaces chaudes. */
+  --gl-sun: #f2d35d;
+  --gl-sun-600: #f5c039;
+  --gl-sand-50: #fdf7e4;
+
+  /* Orange foncé au lieu de l'orange clair du design : le blanc dessus ne
+     tenait que 3.3:1, en dessous du seuil AA. Sert au bandeau d'alerte, au
+     bandeau newsletter et au raccourci principal de la section « À propos ». */
+  --gl-orange: #bc4f00;
+  --gl-orange-dark: #9c4200;
+  --gl-alert: var(--gl-orange);
+  --gl-alert-50: #fdf0e6;
+
+  --gl-ink-900: #0e171e;
+  --gl-ink-600: #4e5a62;
+  /* Assombri par rapport au design (#7e888e) pour atteindre 4.5:1 sur blanc. */
+  --gl-ink-400: #69737a;
+
+  --gl-border: #d6e0e3;
+  --gl-white: #ffffff;
+
+  --gl-container: 1160px;
+  --gl-gutter: 20px;
+
+  --gl-radius-sm: 8px;
+  --gl-radius: 12px;
+  --gl-radius-lg: 14px;
+
+  --gl-font: 'Mulish', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* Réservée aux grands titres : Abril Fatface a des déliés très fins qui
+     disparaissent en petit corps. Toujours en graisse 400. */
+  --gl-font-display: 'Abril Fatface', Georgia, 'Times New Roman', serif;
+}
+
+@media (min-width: 1080px) {
+  :root { --gl-gutter: 32px; }
+}
+
+/* --- Base ---------------------------------------------------------------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--gl-font);
+  color: var(--gl-ink-900);
+  background: var(--gl-white);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* Toute image issue de la médiathèque remplit son cadre sans se déformer. */
+.gl-media { position: relative; overflow: hidden; background: var(--gl-lagoon-50); }
+.gl-media img { width: 100%; height: 100%; object-fit: cover; }
+
+/* Cadre vide, en attendant que la mairie téléverse la photo. */
+.gl-media--empty::after {
+  content: attr(data-placeholder);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gl-ink-400);
+  background: var(--gl-lagoon-50);
+  border: 1px dashed var(--gl-border);
+}
+
+.gl-container {
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 0 var(--gl-gutter);
+}
+
+.gl-section { padding: 48px 0; background: var(--gl-white); }
+.gl-section--alt { background: var(--gl-lagoon-50); }
+.gl-section__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--gl-ink-900);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.gl-section__lead {
+  font-size: 15px;
+  color: var(--gl-ink-600);
+  margin: 0 0 28px;
+  max-width: 560px;
+}
+
+@media (min-width: 1080px) {
+  .gl-section { padding: 80px 0; }
+  .gl-section__title { font-size: 32px; }
+  .gl-section__lead { font-size: 16px; }
+}
+
+/* Surtitre de section : une barre verte et un intitulé en capitales. */
+.gl-kicker-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+.gl-kicker-row__bar {
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  /* Le doré du blason sur tous les surtitres : il réchauffe sans jamais porter
+     d'information, et laisse l'orange au seul usage des alertes. */
+  background: var(--gl-sun-600);
+  flex-shrink: 0;
+}
+.gl-kicker-row__text {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gl-lagoon-600);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* --- Séparateurs en vague --------------------------------------------------
+   Chaque vague est peinte de la couleur de la section qui suit, sur le fond de
+   la section qui précède : elle donne l'illusion d'une découpe organique.
+   -------------------------------------------------------------------------- */
+
+.gl-wave { position: relative; line-height: 0; }
+.gl-wave svg { display: block; width: 100%; height: 32px; }
+
+.gl-wave--on-white { background: var(--gl-white); }
+.gl-wave--on-alt { background: var(--gl-lagoon-50); }
+.gl-wave--on-deep { background: var(--gl-lagoon-900); }
+
+.gl-wave--fill-white path { fill: var(--gl-white); }
+.gl-wave--fill-alt path { fill: var(--gl-lagoon-50); }
+.gl-wave--fill-deep path { fill: var(--gl-lagoon-900); }
+.gl-wave--fill-ink path { fill: var(--gl-ink-900); }
+.gl-wave--fill-sand path { fill: var(--gl-sand-50); }
+
+/* La vague qui suit le bandeau mord sur l'image plutôt que de s'ajouter. */
+.gl-wave--after-hero { margin-top: -32px; z-index: 1; }
+
+@media (min-width: 1080px) {
+  .gl-wave svg { height: 48px; }
+  .gl-wave--after-hero { margin-top: -48px; }
+}
+
+/* --- Section « À propos de la commune » ------------------------------------ */
+
+.gl-welcome {
+  position: relative;
+  overflow: hidden;
+  background: var(--gl-white);
+  padding: 40px 0 56px;
+}
+/* Le filigrane reprend le soleil et les vagues du blason : le doré y est plus
+   juste que le bleu pâle, et réchauffe le haut de la page. */
+.gl-welcome__watermark {
+  position: absolute;
+  right: -60px;
+  top: -40px;
+  width: 220px;
+  height: 220px;
+  color: var(--gl-sun);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.gl-welcome__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+  align-items: center;
+}
+.gl-welcome__title {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--gl-ink-900);
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+.gl-welcome__text {
+  font-size: 15px;
+  color: var(--gl-ink-600);
+  line-height: 1.7;
+  margin: 0 0 24px;
+  max-width: 520px;
+}
+.gl-welcome__links { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.gl-pill {
+  display: inline-block;
+  padding: 9px 18px;
+  border-radius: 999px;
+  font-size: 13.5px;
+  font-weight: 700;
+  border: 1.5px solid var(--gl-border);
+  background: var(--gl-white);
+  color: var(--gl-ink-600);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.gl-pill:hover { border-color: var(--gl-lagoon-500); color: var(--gl-lagoon-700); }
+.gl-pill--primary {
+  border-color: var(--gl-orange);
+  background: var(--gl-orange);
+  color: var(--gl-white);
+}
+.gl-pill--primary:hover {
+  border-color: var(--gl-orange-dark);
+  background: var(--gl-orange-dark);
+  color: var(--gl-white);
+}
+
+.gl-figures {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  /* Fond sable plutôt que bleu pâle : la carte des chiffres devient le point
+     chaud de la section. Les chiffres y tiennent 7,2:1. */
+  background: var(--gl-sand-50);
+  border-radius: 16px;
+  padding: 22px 20px;
+}
+.gl-figure { display: flex; flex-direction: column; gap: 2px; }
+.gl-figure__value {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gl-lagoon-700);
+  letter-spacing: -0.01em;
+}
+.gl-figure__label { font-size: 12.5px; font-weight: 600; color: var(--gl-ink-600); }
+
+@media (min-width: 1080px) {
+  .gl-welcome { padding: 64px 0 80px; }
+  .gl-welcome__watermark { right: -20px; top: -30px; width: 320px; height: 320px; }
+  .gl-welcome__grid { grid-template-columns: 1.6fr 1fr; gap: 56px; }
+  .gl-welcome__title { font-size: 34px; }
+  .gl-welcome__text { font-size: 16.5px; }
+  .gl-figures { flex-direction: column; gap: 22px; padding: 28px 26px; }
+  .gl-figure__value { font-size: 28px; }
+}
+
+/* --- Bandeau newsletter ---------------------------------------------------- */
+
+/* Fond sable et non orange : l'orange reste réservé au bandeau d'alerte, seule
+   surface du site qui doit interpeller. Le texte passe donc en sombre. */
+.gl-newsletter { background: var(--gl-sand-50); padding: 28px 0; }
+.gl-newsletter__inner {
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 0 var(--gl-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+.gl-newsletter__title {
+  color: var(--gl-ink-900);
+  font-size: 19px;
+  font-weight: 800;
+  margin: 0 0 4px;
+}
+.gl-newsletter__text { color: var(--gl-ink-600); font-size: 13.5px; margin: 0; }
+.gl-newsletter__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+.gl-newsletter__form input[type="email"] {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 16px;
+  border-radius: 999px;
+  /* Sur le sable, un champ blanc sans bordure se distinguerait mal du fond. */
+  border: 1px solid var(--gl-border);
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--gl-ink-900);
+  background: var(--gl-white);
+}
+.gl-newsletter__submit {
+  padding: 11px 20px;
+  border-radius: 999px;
+  border: 0;
+  background: var(--gl-ink-900);
+  color: var(--gl-white);
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.gl-newsletter__submit:hover { background: #000; }
+.gl-newsletter__note {
+  color: var(--gl-ink-600);
+  font-size: 12px;
+  margin: 8px 0 0;
+  width: 100%;
+}
+.gl-newsletter__note a { color: var(--gl-lagoon-700); text-decoration: underline; }
+.gl-newsletter__feedback {
+  color: var(--gl-ink-900);
+  font-size: 13.5px;
+  font-weight: 700;
+  margin: 0 0 12px;
+  width: 100%;
+}
+
+@media (min-width: 1080px) {
+  .gl-newsletter { padding: 32px 0; }
+  .gl-newsletter__inner { flex-direction: row; align-items: center; }
+  .gl-newsletter__form { width: auto; }
+  .gl-newsletter__form input[type="email"] { flex: none; min-width: 240px; }
+  .gl-newsletter__note { width: auto; }
+}
+
+/* Lien d'évitement, pour la navigation au clavier. */
+.gl-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+  padding: 12px 20px;
+  font-weight: 700;
+  border-radius: 0 0 var(--gl-radius-sm) 0;
+}
+.gl-skip-link:focus { left: 0; }
+
+/* Un focus visible et homogène partout. */
+:where(a, button, input, textarea, select, summary):focus-visible {
+  outline: 3px solid var(--gl-lagoon-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.gl-visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Bandeau info flash --------------------------------------------------- */
+
+.gl-flash { background: var(--gl-alert); color: var(--gl-white); }
+.gl-flash__inner {
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 8px var(--gl-gutter);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.gl-flash__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gl-white);
+  flex-shrink: 0;
+}
+.gl-flash__text { flex: 1; min-width: 0; }
+.gl-flash__text a { text-decoration: underline; }
+.gl-flash__close {
+  background: none;
+  border: 0;
+  color: var(--gl-white);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  padding: 6px;
+  flex-shrink: 0;
+}
+.gl-flash__close:hover { opacity: 0.8; }
+
+/* --- En-tête -------------------------------------------------------------- */
+
+.gl-header {
+  background: var(--gl-white);
+  border-top: 3px solid var(--gl-lagoon-600);
+  border-bottom: 1px solid var(--gl-border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.gl-header__inner {
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 12px var(--gl-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.gl-brand { display: flex; align-items: center; gap: 10px; }
+.gl-brand__badge {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 15px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.gl-brand__badge img { width: 100%; height: 100%; object-fit: cover; }
+/* Logo large de la ville : la hauteur pilote, la largeur suit. */
+.gl-brand--logo { flex-shrink: 1; min-width: 0; }
+.gl-brand__logo {
+  width: auto;
+  height: 38px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.gl-brand__text { display: flex; flex-direction: column; line-height: 1.15; }
+.gl-brand__title { font-size: 14px; font-weight: 700; color: var(--gl-ink-900); }
+.gl-brand__sub { font-size: 11px; font-weight: 500; color: var(--gl-ink-400); }
+
+.gl-burger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: 0;
+  padding: 8px;
+  cursor: pointer;
+}
+.gl-burger span {
+  width: 22px; height: 2px;
+  background: var(--gl-ink-900);
+  border-radius: 2px;
+}
+
+/* Navigation mobile : repliée par défaut, dépliée par le bouton. */
+.gl-nav-mobile {
+  display: none;
+  flex-direction: column;
+  padding: 4px var(--gl-gutter) 16px;
+  border-top: 1px solid var(--gl-border);
+  gap: 2px;
+}
+.gl-nav-mobile[data-open="true"] { display: flex; }
+/* `display: block` est indispensable : en inline, le trait de séparation
+   épouse la largeur du texte au lieu de la ligne, et le calage vertical ne
+   pousse pas les entrées les unes sous les autres. */
+.gl-nav-mobile li a {
+  display: block;
+  padding: 12px 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--gl-ink-900);
+  border-bottom: 1px solid var(--gl-border);
+}
+.gl-nav-mobile .sub-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 14px;
+}
+.gl-nav-mobile .sub-menu a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gl-ink-600);
+}
+.gl-nav-mobile ul { list-style: none; margin: 0; padding: 0; }
+.gl-nav-mobile__cta {
+  margin-top: 12px;
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+  padding: 13px 18px;
+  border-radius: var(--gl-radius-sm);
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* Navigation desktop : masquée sous 1080px. */
+.gl-nav-desktop { display: none; }
+
+@media (min-width: 1080px) {
+  .gl-header__inner { padding: 14px var(--gl-gutter); }
+  .gl-brand__logo { height: 58px; }
+  .gl-brand__title { font-size: 15px; }
+  .gl-burger, .gl-nav-mobile { display: none !important; }
+
+  .gl-nav-desktop { display: flex; align-items: center; gap: 4px; }
+  .gl-nav-desktop > ul {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .gl-nav-desktop li { position: relative; }
+  .gl-nav-desktop > ul > li > a {
+    display: block;
+    padding: 8px 10px 16px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gl-ink-600);
+    white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+  .gl-nav-desktop > ul > li > a:hover,
+  .gl-nav-desktop > ul > li.current-menu-item > a,
+  .gl-nav-desktop > ul > li.current-menu-parent > a { color: var(--gl-lagoon-600); }
+
+  .gl-nav-desktop .sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 8px;
+    z-index: 30;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    min-width: 220px;
+    background: var(--gl-white);
+    border: 1px solid var(--gl-border);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(20, 30, 40, 0.12);
+    /* Fondu et léger glissement à l'ouverture. `visibility` retire le sous-menu
+       fermé du parcours clavier, ce que l'opacité seule ne ferait pas. */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.16s ease, transform 0.16s ease, visibility 0s linear 0.16s;
+  }
+  /* Ouverture au survol et au clavier : sans :focus-within, le menu déroulant
+     serait inatteignable en navigation clavier. */
+  .gl-nav-desktop li:hover > .sub-menu,
+  .gl-nav-desktop li:focus-within > .sub-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+
+  .gl-nav-desktop .sub-menu a {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--gl-ink-900);
+    padding: 9px 12px;
+    border-radius: 7px;
+  }
+  .gl-nav-desktop .sub-menu a:hover { background: var(--gl-lagoon-50); }
+
+  .gl-nav-desktop__cta {
+    background: var(--gl-lagoon-600);
+    color: var(--gl-white);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .gl-nav-desktop__cta:hover {
+    background: var(--gl-lagoon-700);
+    transform: translateY(-1px);
+  }
+}
+
+/* --- Hero ----------------------------------------------------------------- */
+
+.gl-hero {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--gl-lagoon-900);
+}
+.gl-hero__media { position: absolute; inset: 0; }
+/* Voile ancré en bas, là où se trouve le texte : dense sous le titre, il
+   s'efface vers le haut pour laisser voir la photo.
+   Les paliers ne sont pas décoratifs. Sans panneau derrière le texte, c'est ce
+   voile seul qui garantit la lisibilité sur une photo inconnue : à 0,78
+   d'opacité, du blanc tient 6,1:1 même sur une image entièrement blanche. En
+   dessous de 0,70 on repasse sous le seuil — ne pas éclaircir ces valeurs. */
+.gl-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(var(--gl-lagoon-900-rgb), 0.85) 0%,
+    rgba(var(--gl-lagoon-900-rgb), 0.78) 55%,
+    rgba(var(--gl-lagoon-900-rgb), 0.25) 85%,
+    rgba(var(--gl-lagoon-900-rgb), 0.15) 100%
+  );
+  pointer-events: none;
+}
+.gl-hero__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 0 var(--gl-gutter) 48px;
+}
+
+/* Plus de panneau derrière le texte : c'est le voile de la photo qui assure la
+   lisibilité. Ne reste qu'une contrainte de largeur, pour que les lignes ne
+   s'étirent pas sur toute la page. */
+.gl-hero__panel {
+  display: block;
+  max-width: 640px;
+}
+
+/* Pastille flottante « Grand-Lahou en images ». */
+.gl-hero__badge {
+  position: absolute;
+  z-index: 3;
+  top: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 24px rgba(10, 25, 35, 0.25);
+  color: var(--gl-ink-900);
+  font-size: 12.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.gl-hero__badge:hover { background: var(--gl-white); transform: translateY(-1px); }
+.gl-hero__badge svg { color: var(--gl-lagoon-700); flex-shrink: 0; }
+.gl-kicker {
+  display: inline-block;
+  color: var(--gl-white);
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: 16px;
+}
+.gl-hero__title {
+  color: var(--gl-white);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1.15;
+  margin: 0 0 14px;
+  max-width: 640px;
+  letter-spacing: -0.01em;
+}
+.gl-hero__subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  margin: 0 0 24px;
+  max-width: 480px;
+}
+.gl-hero__actions { display: flex; flex-direction: column; gap: 12px; }
+
+/* Sur téléphone, le titre passe sur trois lignes et les boutons s'empilent :
+   le bloc de texte monte bien plus haut que sur grand écran. Le voile dense
+   doit donc remonter avec lui, sinon le haut du titre retombe à 4,0:1. */
+@media (max-width: 699px) {
+  .gl-hero__overlay {
+    background: linear-gradient(
+      to top,
+      rgba(var(--gl-lagoon-900-rgb), 0.85) 0%,
+      rgba(var(--gl-lagoon-900-rgb), 0.78) 75%,
+      rgba(var(--gl-lagoon-900-rgb), 0.3) 95%,
+      rgba(var(--gl-lagoon-900-rgb), 0.2) 100%
+    );
+  }
+}
+
+@media (min-width: 1080px) {
+  .gl-hero { min-height: 680px; }
+  .gl-hero__content { padding: 0 var(--gl-gutter) 64px; }
+  .gl-hero__badge { top: 28px; right: 32px; }
+  .gl-hero__title { font-size: 44px; }
+  .gl-hero__subtitle { font-size: 17px; }
+  .gl-hero__actions { flex-direction: row; }
+}
+
+/* --- Carrousel du bandeau --------------------------------------------------
+   Les diapositives sont empilées dans une même cellule de grille : la plus
+   haute donne sa hauteur au bandeau, sans positionnement absolu qui laisserait
+   déborder un texte long sur petit écran.
+   -------------------------------------------------------------------------- */
+
+.gl-hero--carousel { display: block; }
+
+.gl-hero__slides { display: grid; }
+
+.gl-hero__slide {
+  grid-area: 1 / 1;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 560px;
+  opacity: 0;
+  /* `visibility` retire la diapositive inactive du parcours clavier et des
+     lecteurs d'écran — ce que `opacity` seule ne ferait pas. */
+  visibility: hidden;
+  transition: opacity 0.6s ease, visibility 0s linear 0.6s;
+}
+.gl-hero__slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.6s ease;
+}
+
+/* Commandes affichées seulement quand le script a pris la main. */
+.gl-carousel__ui { display: none; }
+.js-carousel .gl-carousel__ui { display: block; }
+
+.gl-carousel__ui-inner {
+  position: absolute;
+  /* Sous la pastille « Grand-Lahou en images », qui occupe le coin. */
+  top: 64px;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 0 var(--gl-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  /* Le conteneur couvre toute la largeur : il ne doit pas intercepter les
+     clics destinés à la diapositive. */
+  pointer-events: none;
+}
+.gl-carousel__ui-inner > * { pointer-events: auto; }
+
+.gl-carousel__btn {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(var(--gl-lagoon-900-rgb), 0.55);
+  color: var(--gl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.gl-carousel__btn:hover { background: rgba(var(--gl-lagoon-900-rgb), 0.85); }
+
+.gl-carousel__dots {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+/* Le point mesure 10 px mais sa cible tactile en fait 24. */
+.gl-carousel__dot {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.gl-carousel__dot::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.25);
+  transition: background 0.15s ease;
+}
+.gl-carousel__dot.is-active::before { background: var(--gl-white); }
+
+/* Icône « pause » par défaut, « lecture » quand le défilement est arrêté. */
+.gl-carousel__icon-pause {
+  width: 10px;
+  height: 12px;
+  border-left: 3px solid currentColor;
+  border-right: 3px solid currentColor;
+}
+.gl-carousel__btn--toggle.is-paused .gl-carousel__icon-pause {
+  width: 0;
+  height: 0;
+  margin-left: 3px;
+  border-left: 11px solid currentColor;
+  border-right: 0;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+
+@media (min-width: 1080px) {
+  .gl-hero__slide { min-height: 680px; }
+  .gl-carousel__ui-inner { top: 82px; }
+}
+
+/* --- Boutons -------------------------------------------------------------- */
+
+.gl-btn {
+  display: inline-block;
+  padding: 14px 24px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+.gl-btn--primary { background: var(--gl-lagoon-600); color: var(--gl-white); }
+.gl-btn--primary:hover {
+  background: var(--gl-lagoon-700);
+  transform: translateY(-2px);
+}
+.gl-btn--ghost {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.65);
+  color: var(--gl-white);
+}
+.gl-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.26);
+  transform: translateY(-2px);
+}
+
+/* --- Accès rapides -------------------------------------------------------- */
+
+.gl-quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.gl-quick-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--gl-lagoon-50);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius-lg);
+  padding: 18px 16px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.gl-quick-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(20, 40, 60, 0.12);
+  border-color: var(--gl-lagoon-500);
+}
+.gl-quick-card__icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: var(--gl-lagoon-100);
+  color: var(--gl-lagoon-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gl-quick-card__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  line-height: 1.3;
+}
+.gl-quick-card__arrow {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gl-lagoon-600);
+  margin-top: auto;
+}
+
+@media (min-width: 1080px) {
+  .gl-quick-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .gl-quick-card { padding: 24px 20px; }
+  .gl-quick-card__label { font-size: 15px; }
+}
+
+/* --- En-tête de section avec lien « tout voir » --------------------------- */
+
+.gl-section__header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+.gl-section__header .gl-section__lead { margin-bottom: 0; }
+.gl-see-all {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gl-lagoon-600);
+  white-space: nowrap;
+}
+.gl-see-all:hover { text-decoration: underline; }
+
+@media (min-width: 1080px) {
+  .gl-section__header { flex-direction: row; align-items: flex-end; }
+}
+
+/* --- Actualités ----------------------------------------------------------- */
+
+.gl-news-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.gl-news-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius-lg);
+  overflow: hidden;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.gl-news-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 30px rgba(20, 40, 60, 0.14);
+}
+.gl-news-card__top { position: relative; }
+.gl-news-card__media { width: 100%; aspect-ratio: 16 / 10; }
+.gl-news-card__body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  /* Pousse « Lire la suite » en bas : les cartes d'une même rangée alignent
+     ainsi leur pied, quelle que soit la longueur du titre. */
+  flex: 1;
+}
+
+/* Pastille de date posée sur le bas de l'image, comme sur la référence.
+   Les cartes alternent le sable et le bleu, d'où le nth-child plus bas. */
+.gl-news-card__date {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 7px 14px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
+  background: var(--gl-sun);
+  color: var(--gl-ink-900);
+}
+
+.gl-news-card__cats {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--gl-lagoon-700);
+  background: var(--gl-sand-50);
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+.gl-news-card__more {
+  margin-top: auto;
+  padding-top: 2px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--gl-lagoon-700);
+}
+.gl-news-card:hover .gl-news-card__more { text-decoration: underline; }
+
+/* Alternance sable / bleu d'une carte à l'autre. */
+.gl-news-grid > .gl-news-card:nth-child(even) .gl-news-card__date {
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+}
+.gl-news-grid > .gl-news-card:nth-child(even) .gl-news-card__cats {
+  background: var(--gl-lagoon-50);
+}
+.gl-news-card__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 0;
+  line-height: 1.3;
+}
+.gl-news-card__excerpt {
+  font-size: 13.5px;
+  color: var(--gl-ink-600);
+  margin: 0;
+}
+
+@media (min-width: 700px) {
+  .gl-news-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1080px) {
+  .gl-news-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; }
+}
+
+/* --- Agenda --------------------------------------------------------------- */
+
+.gl-agenda { display: flex; flex-direction: column; gap: 12px; }
+.gl-agenda__row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 16px;
+  background: var(--gl-sand-50);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.gl-agenda__row:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(20, 40, 60, 0.1);
+  border-color: var(--gl-lagoon-500);
+}
+.gl-agenda__media {
+  width: 76px; height: 76px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+/* Sur les petits écrans, la photo et la pastille de date ne laissent pas assez
+   de place au titre : on garde la date, qui porte l'information utile. */
+@media (max-width: 519px) {
+  .gl-agenda__media { display: none; }
+}
+.gl-agenda__date {
+  width: 76px; height: 76px;
+  border-radius: 10px;
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.gl-agenda__day { font-size: 18px; font-weight: 800; line-height: 1; }
+.gl-agenda__month { font-size: 10px; font-weight: 700; letter-spacing: 0.05em; }
+.gl-agenda__body { flex: 1; min-width: 0; }
+.gl-agenda__title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 0 0 4px;
+}
+.gl-agenda__meta { font-size: 13px; color: var(--gl-ink-600); margin: 0; }
+
+@media (min-width: 1080px) {
+  .gl-agenda__row { padding: 16px 22px; }
+  .gl-agenda__title { font-size: 16px; }
+}
+
+/* --- Découvrir Grand-Lahou ------------------------------------------------ */
+
+.gl-discover { background: var(--gl-lagoon-900); padding: 48px 0; }
+.gl-discover .gl-kicker {
+  color: var(--gl-green-100);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  margin-bottom: 14px;
+}
+.gl-discover__title {
+  color: var(--gl-white);
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 12px;
+}
+.gl-discover__text {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 14.5px;
+  line-height: 1.6;
+  max-width: 620px;
+  margin: 0 0 28px;
+}
+.gl-discover__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.gl-discover__card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.18s ease;
+}
+.gl-discover__card:hover { transform: translateY(-4px); }
+/* Sur le fond bleu nuit, un cadre d'attente clair éclabousserait la section. */
+.gl-discover .gl-media,
+.gl-discover .gl-media--empty::after {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.65);
+}
+.gl-discover__media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--gl-radius);
+  overflow: hidden;
+}
+.gl-discover__label { font-size: 14px; font-weight: 700; color: var(--gl-white); }
+.gl-discover__more {
+  color: var(--gl-white);
+  font-weight: 700;
+  font-size: 15px;
+  border-bottom: 2px solid var(--gl-lagoon-500);
+  padding-bottom: 2px;
+  display: inline-block;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+.gl-discover__more:hover {
+  border-color: var(--gl-green-600);
+  opacity: 0.85;
+}
+
+@media (min-width: 700px) {
+  .gl-discover__grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1080px) {
+  .gl-discover { padding: 80px 0; }
+  .gl-discover__title { font-size: 32px; }
+  .gl-discover__text { font-size: 16px; }
+}
+
+/* --- Pied de page --------------------------------------------------------- */
+
+.gl-footer {
+  background: var(--gl-ink-900);
+  color: rgba(255, 255, 255, 0.75);
+  padding: 40px 0 0;
+}
+.gl-footer__grid {
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 0 var(--gl-gutter) 40px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 32px;
+}
+.gl-footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.gl-footer__badge {
+  width: 34px; height: 34px;
+  border-radius: var(--gl-radius-sm);
+  background: var(--gl-lagoon-600);
+  color: var(--gl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+}
+.gl-footer__brand-text { color: var(--gl-white); font-weight: 700; font-size: 15px; }
+
+/* Carton clair derrière le logo, pour qu'il reste lisible sur fond sombre. */
+.gl-footer__logo {
+  display: inline-block;
+  background: var(--gl-white);
+  border-radius: var(--gl-radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  max-width: 260px;
+}
+.gl-footer__logo img { width: 100%; height: auto; display: block; }
+.gl-footer__address {
+  font-size: 13.5px;
+  line-height: 1.7;
+  margin: 0 0 10px;
+  color: rgba(255, 255, 255, 0.7);
+}
+.gl-footer__address a:hover { text-decoration: underline; }
+.gl-footer__heading {
+  color: var(--gl-white);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 14px;
+}
+.gl-footer__links { list-style: none; margin: 0; padding: 0; }
+.gl-footer__links a {
+  display: block;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 6px 0;
+}
+.gl-footer__links a:hover { color: var(--gl-white); }
+.gl-footer__social { display: flex; gap: 10px; margin-top: 16px; }
+.gl-footer__heading--map { margin-top: 20px; }
+
+/* Dernières actualités, en quatrième colonne du pied de page. */
+.gl-footer__news { display: flex; gap: 10px; margin-bottom: 14px; }
+.gl-footer__news:hover .gl-footer__news-title { color: var(--gl-white); }
+.gl-footer__news-media {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--gl-radius-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.gl-footer__news-date {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--gl-lagoon-500);
+  text-transform: uppercase;
+}
+.gl-footer__news-title {
+  display: block;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 3px;
+  line-height: 1.35;
+}
+.gl-footer__social a {
+  width: 36px; height: 36px;
+  border-radius: var(--gl-radius-sm);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gl-white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gl-footer__social a:hover { background: rgba(255, 255, 255, 0.16); }
+.gl-footer__map {
+  border-radius: 10px;
+  overflow: hidden;
+  min-height: 90px;
+}
+.gl-footer__map iframe { display: block; width: 100%; height: 160px; border: 0; }
+.gl-footer__map--empty {
+  height: 90px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12.5px;
+  color: rgba(255, 255, 255, 0.6);
+}
+.gl-footer__bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: var(--gl-container);
+  margin: 0 auto;
+  padding: 18px var(--gl-gutter);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  justify-content: space-between;
+  font-size: 12.5px;
+}
+.gl-footer__legal {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.gl-footer__bottom a { color: rgba(255, 255, 255, 0.7); }
+.gl-footer__bottom a:hover { color: var(--gl-white); }
+
+@media (min-width: 1080px) {
+  .gl-footer { padding: 64px 0 0; }
+  .gl-footer__grid { grid-template-columns: 1.2fr 0.8fr 1fr 1.1fr; gap: 36px; }
+  .gl-footer__bottom {
+    flex-direction: row;
+    align-items: center;
+    padding: 20px var(--gl-gutter);
+  }
+}
+
+/* --- Pages de contenu ----------------------------------------------------- */
+
+.gl-page-header {
+  background: var(--gl-lagoon-50);
+  color: var(--gl-ink-900);
+  padding: 28px 0 24px;
+}
+.gl-page-header__title {
+  font-size: 26px;
+  font-weight: 800;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+.gl-page-header__lead {
+  color: var(--gl-ink-600);
+  font-size: 14.5px;
+  margin: 10px 0 0;
+  max-width: 640px;
+}
+
+.gl-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gl-ink-400);
+  margin-bottom: 14px;
+}
+.gl-breadcrumb a { color: var(--gl-lagoon-600); }
+.gl-breadcrumb a:hover { text-decoration: underline; }
+
+.gl-single__media {
+  max-width: 720px;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--gl-radius);
+  margin-bottom: 28px;
+}
+
+.gl-prose {
+  max-width: 720px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--gl-ink-900);
+}
+.gl-prose > * + * { margin-top: 1em; }
+.gl-prose h2 { font-size: 22px; font-weight: 800; margin-top: 1.8em; }
+.gl-prose h3 { font-size: 18px; font-weight: 700; margin-top: 1.5em; }
+.gl-prose a { color: var(--gl-lagoon-700); text-decoration: underline; }
+.gl-prose img, .gl-prose figure { border-radius: var(--gl-radius); }
+.gl-prose blockquote {
+  border-left: 3px solid var(--gl-lagoon-500);
+  padding-left: 16px;
+  margin-left: 0;
+  color: var(--gl-ink-600);
+}
+.gl-prose table { width: 100%; border-collapse: collapse; }
+.gl-prose th, .gl-prose td {
+  border: 1px solid var(--gl-border);
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 14.5px;
+}
+.gl-prose th { background: var(--gl-lagoon-50); font-weight: 700; }
+
+@media (min-width: 1080px) {
+  .gl-page-header { padding: 44px 0 36px; }
+  .gl-page-header__title { font-size: 38px; }
+  .gl-page-header__lead { font-size: 16px; }
+}
+
+/* --- Grille de fiches (démarches, services) ------------------------------- */
+
+.gl-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+.gl-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius-lg);
+}
+a.gl-card:hover { border-color: var(--gl-lagoon-500); }
+.gl-card__icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  background: var(--gl-lagoon-100);
+  color: var(--gl-lagoon-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+.gl-card__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 0;
+  line-height: 1.3;
+}
+.gl-card__text { font-size: 14px; color: var(--gl-ink-600); margin: 0; }
+.gl-card__meta { font-size: 13px; color: var(--gl-lagoon-700); font-weight: 600; margin: 0; }
+
+@media (min-width: 700px) {
+  .gl-cards { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+}
+@media (min-width: 1080px) {
+  .gl-cards { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* --- Informations clés d'une démarche ------------------------------------- */
+
+.gl-facts {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin: 0 0 32px;
+  padding: 0;
+}
+.gl-facts__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  background: var(--gl-lagoon-50);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius);
+}
+.gl-facts__icon { color: var(--gl-lagoon-600); flex-shrink: 0; }
+.gl-facts__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gl-ink-600);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.gl-facts__value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 2px 0 0;
+}
+
+@media (min-width: 700px) {
+  .gl-facts { grid-template-columns: repeat(3, 1fr); }
+}
+
+.gl-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 32px;
+  max-width: 720px;
+}
+.gl-btn--outline {
+  background: var(--gl-white);
+  border-color: var(--gl-lagoon-600);
+  color: var(--gl-lagoon-700);
+}
+.gl-btn--outline:hover { background: var(--gl-lagoon-50); }
+.gl-note {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--gl-ink-600);
+  max-width: 720px;
+}
+
+@media (min-width: 700px) {
+  .gl-actions { flex-direction: row; }
+}
+
+/* --- Coordonnées d'un service --------------------------------------------- */
+
+.gl-contact-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gl-contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--gl-ink-600);
+}
+.gl-contact-list__icon { color: var(--gl-lagoon-600); flex-shrink: 0; line-height: 0; }
+.gl-contact-list a { color: var(--gl-lagoon-700); font-weight: 600; }
+.gl-contact-list a:hover { text-decoration: underline; }
+
+/* --- Numéros utiles -------------------------------------------------------- */
+
+.gl-numbers { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.gl-numbers__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 14px 18px;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius);
+}
+.gl-numbers__label {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  display: flex;
+  flex-direction: column;
+}
+.gl-numbers__desc { font-size: 13px; font-weight: 500; color: var(--gl-ink-600); }
+.gl-numbers__tel {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gl-lagoon-700);
+  white-space: nowrap;
+}
+.gl-numbers__tel:hover { text-decoration: underline; }
+
+/* --- Pages institutionnelles ---------------------------------------------- */
+
+.gl-portrait { border-radius: 50%; }
+.gl-portrait.gl-media--empty::after { border-radius: 50%; }
+
+.gl-intro { margin-bottom: 32px; }
+
+.gl-subtitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--gl-ink-900);
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 1080px) {
+  .gl-subtitle { font-size: 24px; }
+}
+
+/* Mot du maire */
+
+/* Portrait en pied à droite du message, comme sur les sites de mairie
+   comparables. Sur téléphone il passe au-dessus : on voit d'abord le visage,
+   puis on lit. D'où l'ordre inversé plus bas. */
+.gl-mayor {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 28px;
+}
+.gl-mayor__portrait {
+  order: 1;
+  width: 100%;
+  max-width: 320px;
+  margin-inline: auto;
+}
+.gl-mayor__media {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--gl-radius-lg);
+}
+.gl-mayor__body { order: 2; min-width: 0; }
+.gl-mayor__name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gl-ink-900);
+  margin: 0 0 6px;
+}
+.gl-mayor__role {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gl-lagoon-600);
+  margin: 0 0 18px;
+}
+.gl-mayor__text { line-height: 1.7; }
+
+@media (min-width: 1080px) {
+  .gl-mayor { grid-template-columns: 1.5fr 1fr; gap: 48px; }
+  .gl-mayor__body { order: 1; }
+  .gl-mayor__portrait { order: 2; max-width: none; }
+  .gl-mayor__name { font-size: 26px; }
+}
+
+/* Conseil municipal */
+
+.gl-council {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.gl-council__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.gl-council__photo { width: 84px; height: 84px; }
+.gl-council__name { font-size: 14px; font-weight: 700; color: var(--gl-ink-900); }
+.gl-council__role { font-size: 12.5px; font-weight: 500; color: var(--gl-ink-400); }
+.gl-council__delegation {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--gl-lagoon-600);
+}
+
+@media (min-width: 1080px) {
+  .gl-council { grid-template-columns: repeat(4, 1fr); gap: 28px; }
+  .gl-council__photo { width: 104px; height: 104px; }
+}
+
+/* --- Contact -------------------------------------------------------------- */
+
+.gl-contact {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+.gl-contact__infos { display: flex; flex-direction: column; gap: 20px; }
+.gl-contact__row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--gl-border);
+}
+.gl-contact__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gl-lagoon-600);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.gl-contact__value { font-size: 14.5px; font-weight: 600; color: var(--gl-ink-900); }
+.gl-contact__value a { color: var(--gl-lagoon-700); }
+.gl-contact__value a:hover { text-decoration: underline; }
+
+.gl-contact__map {
+  border-radius: var(--gl-radius-lg);
+  overflow: hidden;
+  margin-top: 32px;
+}
+.gl-contact__map iframe { display: block; width: 100%; height: 260px; border: 0; }
+.gl-contact__map--empty {
+  height: 260px;
+  background: var(--gl-lagoon-50);
+  border: 1px dashed var(--gl-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--gl-ink-400);
+}
+
+@media (min-width: 1080px) {
+  .gl-contact { flex-direction: row; gap: 56px; }
+  .gl-contact__infos { flex: 0 0 320px; }
+}
+
+/* --- Formulaire ----------------------------------------------------------- */
+
+.gl-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.gl-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+}
+.gl-form__field input,
+.gl-form__field textarea {
+  padding: 11px 14px;
+  border-radius: var(--gl-radius-sm);
+  border: 1px solid var(--gl-border);
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 400;
+  color: var(--gl-ink-900);
+  background: var(--gl-white);
+  width: 100%;
+}
+.gl-form__field textarea { resize: vertical; }
+.gl-form__field input:focus,
+.gl-form__field textarea:focus { border-color: var(--gl-lagoon-500); }
+.gl-form__submit { align-self: stretch; }
+
+/* Piège à robots : retiré du flux sans display:none, que certains robots
+   savent détecter. */
+.gl-form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+@media (min-width: 700px) {
+  .gl-form__submit { align-self: flex-start; }
+}
+
+.gl-alert {
+  padding: 14px 18px;
+  border-radius: var(--gl-radius);
+  font-size: 14.5px;
+  font-weight: 600;
+  margin: 0 0 28px;
+  border: 1px solid transparent;
+}
+.gl-alert--succes {
+  background: var(--gl-green-100);
+  border-color: var(--gl-green-600);
+  color: var(--gl-green-700);
+}
+.gl-alert--erreur {
+  background: var(--gl-alert-50);
+  border-color: var(--gl-alert);
+  color: var(--gl-alert);
+}
+
+/* --- Découvrir ------------------------------------------------------------ */
+
+.gl-presentation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+.gl-presentation__media { width: 100%; }
+.gl-presentation__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--gl-radius-lg);
+}
+.gl-presentation__body { width: 100%; }
+.gl-presentation__text { font-size: 14.5px; line-height: 1.7; max-width: 480px; }
+
+@media (min-width: 1080px) {
+  .gl-presentation { flex-direction: row; gap: 48px; margin-bottom: 56px; }
+  .gl-presentation__media { flex: 1 1 50%; }
+  .gl-presentation__body { flex: 1 1 50%; }
+  .gl-presentation__text { font-size: 16px; }
+}
+
+.gl-poi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.gl-poi { display: flex; flex-direction: column; gap: 8px; }
+.gl-poi__media {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: var(--gl-radius);
+}
+.gl-poi:hover .gl-poi__media { outline: 2px solid var(--gl-lagoon-500); outline-offset: 2px; }
+.gl-poi__label { font-size: 13.5px; font-weight: 700; color: var(--gl-ink-900); }
+.gl-poi__count { font-size: 12.5px; color: var(--gl-ink-400); font-weight: 600; }
+
+@media (min-width: 1080px) {
+  .gl-poi-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+}
+
+.gl-gallery {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.gl-gallery__media {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--gl-radius);
+}
+.gl-gallery__item:hover .gl-gallery__media { outline: 2px solid var(--gl-lagoon-500); outline-offset: 2px; }
+
+@media (min-width: 1080px) {
+  .gl-gallery { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+}
+
+/* Liste des lieux d'une catégorie */
+
+.gl-places {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+.gl-place {
+  display: flex;
+  flex-direction: column;
+  background: var(--gl-white);
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius-lg);
+  overflow: hidden;
+}
+.gl-place:hover { border-color: var(--gl-lagoon-500); }
+.gl-place__media { width: 100%; aspect-ratio: 4 / 3; }
+.gl-place__body { padding: 16px; }
+.gl-place__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gl-ink-900);
+  margin: 0 0 6px;
+  line-height: 1.3;
+}
+.gl-place__text { font-size: 13.5px; color: var(--gl-ink-600); margin: 0; }
+
+@media (min-width: 700px) {
+  .gl-places { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1080px) {
+  .gl-places { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+}
+
+/* --- Pagination ----------------------------------------------------------- */
+
+.gl-pagination { margin-top: 36px; }
+.gl-pagination .page-numbers {
+  display: inline-block;
+  min-width: 40px;
+  padding: 9px 12px;
+  margin: 0 4px 8px 0;
+  text-align: center;
+  border: 1px solid var(--gl-border);
+  border-radius: var(--gl-radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gl-ink-600);
+}
+.gl-pagination .page-numbers.current {
+  background: var(--gl-lagoon-600);
+  border-color: var(--gl-lagoon-600);
+  color: var(--gl-white);
+}
+.gl-pagination a.page-numbers:hover { border-color: var(--gl-lagoon-500); }
+
+/* --- Défilement au doigt sur téléphone -------------------------------------
+   Une grille marquée « gl-swipe » se transforme en carrousel horizontal sous
+   700 px : empilées, quatre cartes occupaient près de trois écrans.
+
+   Le défilement est natif — pas une ligne de script — avec calage sur chaque
+   élément. La carte suivante dépasse volontairement du bord droit : c'est ce
+   débord qui indique qu'on peut faire glisser, sans flèches ni pastilles.
+
+   Ce bloc arrive après les grilles qu'il remplace, pour l'emporter à
+   spécificité égale.
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 699px) {
+  .gl-swipe {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    /* Les cartes filent jusqu'aux bords de l'écran : on annule la gouttière du
+       conteneur et on la reporte en marge interne. `margin-inline` plutôt que
+       `margin`, pour ne pas écraser les marges verticales de la grille. */
+    margin-inline: calc(var(--gl-gutter) * -1);
+    padding: 0 var(--gl-gutter) 4px;
+    /* Sans cela, le calage avale la gouttière et le premier élément se colle au
+       bord de l'écran au lieu de s'aligner sur le titre de section. */
+    scroll-padding-left: var(--gl-gutter);
+    scrollbar-width: none;
+  }
+  .gl-swipe::-webkit-scrollbar { display: none; }
+  .gl-swipe > * {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+}
+
+/* --- Titres d'affichage ----------------------------------------------------
+   Abril Fatface sur les grands titres seulement. En dessous d'environ 19 px,
+   ses déliés deviennent illisibles sur un écran de téléphone : les titres de
+   cartes, les noms d'élus et les intitulés du pied de page restent en Mulish.
+
+   Ce bloc arrive après les règles qui fixent la graisse à 800, pour la ramener
+   à 400 — Abril Fatface n'existe que dans cette graisse, et un navigateur
+   sommé d'afficher du 800 fabriquerait un faux gras baveux.
+   -------------------------------------------------------------------------- */
+
+.gl-hero__title,
+.gl-section__title,
+.gl-welcome__title,
+.gl-discover__title,
+.gl-page-header__title,
+.gl-subtitle,
+.gl-mayor__name,
+.gl-newsletter__title,
+.gl-figure__value {
+  font-family: var(--gl-font-display);
+  font-weight: 400;
+  letter-spacing: normal;
+}
+
+/* --- Apparition au défilement ---------------------------------------------- */
+
+/* Le contenu est visible par défaut. L'état masqué n'existe que sous la classe
+   « js-reveal », posée par le script d'amorçage uniquement quand le navigateur
+   sait observer le défilement et que l'utilisateur accepte les animations.
+   Sans JavaScript, rien ne disparaît. */
+
+.gl-reveal,
+.gl-reveal--stagger > * {
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.js-reveal .gl-reveal:not(.gl-reveal--stagger) {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.js-reveal .gl-reveal.is-visible:not(.gl-reveal--stagger) {
+  opacity: 1;
+  transform: none;
+}
+
+/* Sur une grille, ce sont les cartes qui apparaissent, l'une après l'autre. */
+.js-reveal .gl-reveal--stagger > * {
+  opacity: 0;
+  transform: translateY(18px);
+}
+.js-reveal .gl-reveal--stagger.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+.js-reveal .gl-reveal--stagger.is-visible > *:nth-child(2) { transition-delay: 0.08s; }
+.js-reveal .gl-reveal--stagger.is-visible > *:nth-child(3) { transition-delay: 0.16s; }
+.js-reveal .gl-reveal--stagger.is-visible > *:nth-child(4) { transition-delay: 0.24s; }
+.js-reveal .gl-reveal--stagger.is-visible > *:nth-child(5) { transition-delay: 0.32s; }
+.js-reveal .gl-reveal--stagger.is-visible > *:nth-child(6) { transition-delay: 0.4s; }
+.js-reveal .gl-reveal--stagger.is-visible > *:nth-child(n + 7) { transition-delay: 0.48s; }
+
+/* --- Mouvement réduit ------------------------------------------------------ */
+
+/* Les soulèvements au survol sont décoratifs : on les retire pour les
+   personnes qui demandent moins d'animations dans leur système. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+  .gl-btn:hover,
+  .gl-nav-desktop__cta:hover,
+  .gl-quick-card:hover,
+  .gl-news-card:hover,
+  .gl-agenda__row:hover,
+  .gl-discover__card:hover {
+    transform: none;
+  }
+  /* Filet de sécurité : même si « js-reveal » était posée, rien ne reste masqué. */
+  .js-reveal .gl-reveal,
+  .js-reveal .gl-reveal--stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* --- Impression ----------------------------------------------------------- */
+
+@media print {
+  .gl-header, .gl-footer, .gl-flash, .gl-hero__actions { display: none; }
+  body { color: #000; }
+}

@@ -1,0 +1,11 @@
+.env
+.DS_Store
+
+# WordPress core and uploads live in Docker volumes, not in the repository.
+wp-content/uploads/
+wp-content/upgrade/
+wp-content/plugins/
+!wp-content/mu-plugins/
+
+node_modules/
+*.log
