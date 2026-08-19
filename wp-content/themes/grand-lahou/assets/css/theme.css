@@ -964,22 +964,17 @@ img { max-width: 100%; height: auto; display: block; }
   background: var(--gl-lagoon-900);
 }
 .gl-hero__media { position: absolute; inset: 0; }
-/* Voile ancré en bas, là où se trouve le texte : dense sous le titre, il
-   s'efface vers le haut pour laisser voir la photo.
-   Les paliers ne sont pas décoratifs. Sans panneau derrière le texte, c'est ce
-   voile seul qui garantit la lisibilité sur une photo inconnue : à 0,78
-   d'opacité, du blanc tient 6,1:1 même sur une image entièrement blanche. En
-   dessous de 0,70 on repasse sous le seuil — ne pas éclaircir ces valeurs. */
+/* Pas de voile sur la photo : elle garde ses couleurs d'origine.
+   La lisibilité ne repose plus sur l'assombrissement de toute l'image mais sur
+   une boîte posée derrière le texte seul.
+   Conséquence à ne pas perdre de vue : tout élément posé sur la photo doit
+   désormais porter son propre fond, puisqu'il n'y a plus rien pour l'aider —
+   c'est le cas du surtitre, du bouton secondaire et des commandes du carrousel,
+   dont les fonds ont été renforcés en conséquence. */
 .gl-hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(var(--gl-lagoon-900-rgb), 0.85) 0%,
-    rgba(var(--gl-lagoon-900-rgb), 0.78) 55%,
-    rgba(var(--gl-lagoon-900-rgb), 0.25) 85%,
-    rgba(var(--gl-lagoon-900-rgb), 0.15) 100%
-  );
+  background: none;
   pointer-events: none;
 }
 .gl-hero__content {
@@ -1032,36 +1027,57 @@ img { max-width: 100%; height: auto; display: block; }
   letter-spacing: 0.03em;
   margin-bottom: 16px;
 }
+/* Une boîte épousant chaque ligne du titre, plutôt qu'un panneau rectangulaire
+   derrière l'ensemble : le texte reste lisible sans masquer la photo autour.
+
+   « box-decoration-break: clone » est ce qui redonne à chaque ligne son fond et
+   ses marges internes ; sans lui, le navigateur n'en dessine qu'une, ouverte
+   aux extrémités.
+
+   L'affichage en ligne est indispensable au procédé, et il a deux effets :
+   les marges verticales cessent de s'appliquer — l'espacement est donc repris
+   par les éléments suivants — et « max-width » n'a plus de prise, la largeur
+   des lignes venant de .gl-hero__panel.
+
+   Interligne 1,3 pour 6 px de marge interne : les boîtes se touchent au lieu
+   de laisser un interstice clair entre les lignes. Le léger chevauchement ne
+   se voit pas, les fonds d'un même élément étant peints avant son texte.
+
+   0,85 d'opacité : sur une photo entièrement blanche — le pire cas — du blanc
+   y tient 7,6:1. En dessous de 0,70 on repasse sous le seuil AA. */
 .gl-hero__title {
+  display: inline;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  background: rgba(var(--gl-lagoon-900-rgb), 0.85);
   color: var(--gl-white);
   font-size: 28px;
   font-weight: 800;
-  line-height: 1.15;
-  margin: 0 0 14px;
-  max-width: 640px;
+  line-height: 1.3;
+  padding: 6px 16px;
+  margin: 0;
   letter-spacing: -0.01em;
 }
+/* Le sous-titre garde une boîte d'un seul tenant, ajustée à sa ligne la plus
+   longue : découpé ligne à ligne comme le titre, un texte de petit corps
+   devient un empilement d'étiquettes difficile à lire. */
 .gl-hero__subtitle {
-  color: rgba(255, 255, 255, 0.9);
+  width: fit-content;
+  background: rgba(var(--gl-lagoon-900-rgb), 0.85);
+  color: var(--gl-white);
   font-size: 15px;
-  margin: 0 0 24px;
+  padding: 10px 16px;
+  margin: 14px 0 0;
   max-width: 480px;
 }
-.gl-hero__actions { display: flex; flex-direction: column; gap: 12px; }
-
-/* Sur téléphone, le titre passe sur trois lignes et les boutons s'empilent :
-   le bloc de texte monte bien plus haut que sur grand écran. Le voile dense
-   doit donc remonter avec lui, sinon le haut du titre retombe à 4,0:1. */
-@media (max-width: 699px) {
-  .gl-hero__overlay {
-    background: linear-gradient(
-      to top,
-      rgba(var(--gl-lagoon-900-rgb), 0.85) 0%,
-      rgba(var(--gl-lagoon-900-rgb), 0.78) 75%,
-      rgba(var(--gl-lagoon-900-rgb), 0.3) 95%,
-      rgba(var(--gl-lagoon-900-rgb), 0.2) 100%
-    );
-  }
+/* L'espacement est porté ici : le titre étant en ligne, sa marge basse serait
+   ignorée, et les boutons remonteraient contre lui quand il n'y a pas de
+   sous-titre. */
+.gl-hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 22px;
 }
 
 @media (min-width: 1080px) {
@@ -1071,6 +1087,18 @@ img { max-width: 100%; height: auto; display: block; }
   .gl-hero__title { font-size: 44px; }
   .gl-hero__subtitle { font-size: 17px; }
   .gl-hero__actions { flex-direction: row; }
+}
+
+/* Surtitre : uniquement dans le bandeau. Ailleurs — section « Découvrir » — il
+   se pose sur un fond sombre connu, où le blanc translucide fonctionne très
+   bien. Ici la photo est inconnue, il lui faut un fond opaque.
+   « display: block » n'est pas cosmétique : le titre est devenu une boîte en
+   ligne, un surtitre resté en ligne se placerait sur la même ligne que lui. */
+.gl-hero .gl-kicker {
+  display: block;
+  width: fit-content;
+  background: rgba(var(--gl-lagoon-900-rgb), 0.85);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 /* --- Carrousel du bandeau --------------------------------------------------
@@ -1131,7 +1159,9 @@ img { max-width: 100%; height: auto; display: block; }
   flex-shrink: 0;
   border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.45);
-  background: rgba(var(--gl-lagoon-900-rgb), 0.55);
+  /* 0,65 et non 0,55 : sans le voile, 0,55 ne donnait que 3,2:1 sur une
+     photo claire, tout juste le seuil d'un composant d'interface. */
+  background: rgba(var(--gl-lagoon-900-rgb), 0.65);
   color: var(--gl-white);
   display: flex;
   align-items: center;
@@ -1212,13 +1242,17 @@ img { max-width: 100%; height: auto; display: block; }
   background: var(--gl-lagoon-700);
   transform: translateY(-2px);
 }
+/* Fond sombre et non blanc translucide : ce bouton ne vit que sur la photo du
+   bandeau. À 0,14 de blanc sur une image claire, il devenait strictement
+   invisible — 1,0:1. Le lagon à 0,72 lui assure 5,0:1 sur n'importe quelle
+   photo. */
 .gl-btn--ghost {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.65);
+  background: rgba(var(--gl-lagoon-900-rgb), 0.72);
+  border-color: rgba(255, 255, 255, 0.6);
   color: var(--gl-white);
 }
 .gl-btn--ghost:hover {
-  background: rgba(255, 255, 255, 0.26);
+  background: rgba(var(--gl-lagoon-900-rgb), 0.88);
   transform: translateY(-2px);
 }
 
