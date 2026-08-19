@@ -5,7 +5,7 @@ export
 .DEFAULT_GOAL := help
 
 help: ## Affiche cette aide
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
+	@grep -hE '^[a-zA-Z_-]+:.*## .*$$' $(firstword $(MAKEFILE_LIST)) | awk 'BEGIN {FS = ":.*## "}; {printf "  \033[36m%-14s\033[0m %s\n", $$1, $$2}'
 
 up: ## Démarre la stack (WordPress + base de données)
 	docker compose up -d
@@ -37,7 +37,13 @@ install: up ## Installe WordPress et active le thème
 seed: ## Injecte le contenu de démonstration
 	docker compose run --rm cli wp eval-file /tools/seed.php
 
+deploy: ## Déploie le code en ligne (simulation, confirmation, envoi)
+	./tools/deploy.sh
+
+deploy-check: ## Montre ce qui serait déployé, sans rien envoyer
+	./tools/deploy.sh --check
+
 reset: ## Supprime tout et repart de zéro (destructif)
 	docker compose down -v
 
-.PHONY: help up down logs cli install seed reset
+.PHONY: help up down logs cli install seed deploy deploy-check reset

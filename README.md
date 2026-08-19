@@ -29,6 +29,7 @@ Les autres commandes sont listées par `make`.
 ```
 docker-compose.yml            WordPress + MariaDB + WP-CLI
 tools/seed.php                Contenu de démonstration
+tools/deploy.sh               Déploiement du code en ligne (make deploy)
 tools/assets/                 Logo de la ville (WebP servi, PNG d'origine)
 wp-content/
   mu-plugins/grand-lahou-core/  Socle métier — toujours actif

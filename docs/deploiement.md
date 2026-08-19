@@ -163,6 +163,56 @@ déconnecte toutes les sessions ouvertes, ce qui est précisément le but.
 
 ---
 
+## 4.7 Les mises à jour suivantes, en une commande
+
+La première mise en ligne faite, les déploiements de code se réduisent à un
+script, `tools/deploy.sh`, lancé depuis le poste de développement :
+
+```bash
+make deploy
+```
+
+Il vérifie la connexion, montre ce qui partirait, demande confirmation, envoie
+le thème et le socle métier, puis vide le cache et contrôle que le site répond.
+
+```bash
+make deploy-check
+```
+
+montre la même liste sans rien envoyer.
+
+Le script suppose un alias SSH nommé `lahou` dans `~/.ssh/config` du poste :
+
+```
+Host lahou
+  HostName h2web520.infomaniak.ch
+  User rc28nq_tmahamadou001
+```
+
+Utilisez le nom du serveur et non le domaine du site : si Cloudflare est
+placé devant un jour, le domaine cessera de pointer vers l'hébergement et le
+déploiement s'arrêterait de fonctionner sans raison apparente.
+
+Les réglages se surchargent sans modifier le script :
+
+```bash
+GL_HOTE=prod GL_RACINE='~/sites/mairie-grandlahou.ci' GL_URL=https://mairie-grandlahou.ci ./tools/deploy.sh
+```
+
+Trois points à connaître :
+
+- **La base, les images et les extensions ne sont jamais touchées.** Un
+  déploiement de code ne peut pas les écraser : c'est ce qui rend l'opération
+  répétable sans risque.
+- **Le script prévient si des modifications ne sont pas commitées.** Il
+  n'interdit rien — tester une correction avant de la figer est légitime — mais
+  du code déployé sans commit est une version en ligne introuvable dans
+  l'historique.
+- **Ajoutez `--rewrites`** après un changement de slug ou l'ajout d'un type de
+  contenu, faute de quoi les nouvelles adresses renverront des erreurs 404.
+
+---
+
 ## 5. Ce que le code assure déjà
 
 Le module `wp-content/mu-plugins/grand-lahou-core/security.php` traite trois
